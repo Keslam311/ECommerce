@@ -1,5 +1,6 @@
 package com.example.ecommerce.data.network
 
+import com.example.ecommerce.data.model.Banners
 import com.example.ecommerce.data.model.Categories
 import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
@@ -23,4 +24,7 @@ interface ApiService {
 
     @GET("products")
     suspend fun getAllProducts() : Response<Products>
+
+    @GET("banners")
+    suspend fun getBanners() : Response<Banners>
 }

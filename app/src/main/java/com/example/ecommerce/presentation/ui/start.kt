@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,14 +49,14 @@ class Start : Screen {
                 verticalArrangement = Arrangement.SpaceAround
             ) {
                 Text(
-                    text = "ShopNest",
+                    text = stringResource(id = R.string.start_screen1_title),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Serif
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "Welcome to ShopNest Let's Shop!",
+                    text = stringResource(id = R.string.start_screen1_subtitle),
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
@@ -103,7 +104,7 @@ class Start : Screen {
             }
         }
     }
-}
+
 
 class Screen2 : Screen {
     @Composable
@@ -117,14 +118,14 @@ class Screen2 : Screen {
             verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(
-                text = "ShopNest",
+                text = stringResource(id = R.string.start_screen1_title),
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Serif
             )
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "We help people connect with store\n" + "around Bangladesh",
+                text = stringResource(id = R.string.start_screen2_subtitle),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
@@ -176,14 +177,14 @@ class Screen3 : Screen {
             verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(
-                text = "ShopNest",
+                text = stringResource(id = R.string.start_screen1_title),
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Serif
             )
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "We show easy way to shop.\n" + "Just stay at home with us",
+                text = stringResource(id = R.string.start_screen3_subtitle),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
@@ -211,8 +212,9 @@ class Screen3 : Screen {
                     containerColor = Color(0xFFFF9800)
                 )
             ) {
-                Text(text = "Get Started", color = Color.White, fontSize = 20.sp)
+                Text(text = stringResource(id = R.string.start_screen3_Button), color = Color.White, fontSize = 20.sp)
             }
         }
     }
+}
 }
