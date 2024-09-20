@@ -252,42 +252,6 @@ class SignUpScreen : Screen {
             Spacer(modifier = Modifier.height(30.dp))
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Black, CircleShape)
-                        .clickable {
-                            // Handle Facebook sign-up click
-                        }
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.google),
-                        contentDescription = "Google Image",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Black, CircleShape)
-                        .clickable {
-                            // Handle Facebook sign-up click
-                        }
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.facebook2),
-                        contentDescription = "Facebook Image",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            }
-            Row(
-                modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 30.dp),
                 horizontalArrangement = Arrangement.Center
