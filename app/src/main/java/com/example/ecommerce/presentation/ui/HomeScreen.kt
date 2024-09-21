@@ -39,6 +39,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.ecommerce.data.model.CategoryItem
@@ -81,6 +83,7 @@ fun HomeScreenContent(
     val bannersResponse = bannersViewModel.banners.collectAsState()
     val banners = bannersResponse.value?.data ?: emptyList()
     val pagerState = rememberPagerState(pageCount = { banners.size })
+    val navigator = LocalNavigator.currentOrThrow
     Log.d("HomeScreen", "Fuck: $banners")
 
     Scaffold(
@@ -98,7 +101,7 @@ fun HomeScreenContent(
                 IconButton(modifier = Modifier.weight(1f),onClick = { /* Navigate to Cart Screen */ }) {
                     Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")
                 }
-                IconButton(modifier = Modifier.weight(1f),onClick = { /* Navigate to Cart Screen */ }) {
+                IconButton(modifier = Modifier.weight(1f),onClick = { navigator.push(ProfileScreen()) }) {
                     Icon(imageVector = Icons.Default.Settings, contentDescription = "Cart")
                 }
 
@@ -134,7 +137,6 @@ fun HomeScreenContent(
                 Column(
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    // Search Bar
 
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                         Text(
@@ -163,11 +165,14 @@ fun HomeScreenContent(
 
 @Composable
 fun CategoryItem(category: CategoryItem) {
+    val navigator = LocalNavigator.currentOrThrow
     Column(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxSize()
-            .clickable() {},
+            .clickable() {
+                navigator.push(CategoryProductsScreen(categoryId = category.id))
+            },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
