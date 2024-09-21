@@ -18,10 +18,10 @@ class SearchViewModel @Inject constructor(private val apiService: ApiService) : 
     val productSearch : StateFlow<Products?> get() = _productSearch
 
     init {
-        getProductsSearch("")
+        getProductsSearch()
     }
 
-    fun getProductsSearch(text: String){
+    fun getProductsSearch(text: String=""){
         viewModelScope.launch {
             val response = apiService.getSearch(SearchRequest(text))
             if(response.isSuccessful){
