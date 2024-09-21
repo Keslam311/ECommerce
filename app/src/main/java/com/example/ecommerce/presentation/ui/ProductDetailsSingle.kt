@@ -2,12 +2,16 @@ package com.example.ecommerce.presentation.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -99,12 +103,15 @@ class ProductDetailsScreen(
 @Composable
 fun DisplayLoadingOrErrorMessage(productState: Products?) {
     if (productState == null) {
-        Text(
-            text = "جارٍ تحميل تفاصيل المنتج...",
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentHeight(Alignment.CenterVertically), // Adjusted this line
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator()
+        }
     } else {
         Text(
             text = "المنتج غير موجود.",
@@ -116,7 +123,9 @@ fun DisplayLoadingOrErrorMessage(productState: Products?) {
 }
 @Composable
 fun ProductDetailCard(product: ProductItemSmall) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth()
+        .verticalScroll(rememberScrollState()), // Add vertical scroll
+    ) {
         Image(
             painter = rememberAsyncImagePainter(product.image),
             contentDescription = product.name,
