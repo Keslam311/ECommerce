@@ -6,6 +6,7 @@ import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
 import com.example.ecommerce.data.model.Products
 import com.example.ecommerce.data.model.Profile
+import com.example.ecommerce.data.model.SearchRequest
 import com.example.ecommerce.data.model.SignUpRequest
 import com.example.ecommerce.data.model.SignUpResponse
 import retrofit2.Response
@@ -38,4 +39,10 @@ interface ApiService {
 
     @GET("profile")
     suspend fun getProfile(): Response<Profile>
+
+    @POST("products/search")
+    suspend fun getSearch(@Body searchRequest: SearchRequest) : Response<Products>
+
+
+
 }
