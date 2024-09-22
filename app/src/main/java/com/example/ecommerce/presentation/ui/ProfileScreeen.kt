@@ -25,6 +25,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.rememberImagePainter
+import com.example.ecommerce.R
 import com.example.ecommerce.data.model.ProfileDataClass
 import com.example.ecommerce.presentation.viewModel.ProfileViewModel
 
@@ -38,7 +39,6 @@ class ProfileScreen : Screen {
         LaunchedEffect(Unit) {
             viewModel.getProfile { errorMessage ->
                 Log.w("Error", "Error fetching profile: $errorMessage")
-                // يمكنك عرض Snackbar أو Toast هنا لإظهار الخطأ للمستخدم
             }
         }
 
@@ -47,7 +47,6 @@ class ProfileScreen : Screen {
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
@@ -67,28 +66,52 @@ fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(Color.White),
+                .background(Color(0xFFF5F5F5)),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = rememberImagePainter(data = profile.image),
-                contentDescription = "Profile Image",
+            Card(
                 modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = profile.name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = profile.email, fontSize = 16.sp)
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Phone:", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = profile.phone, fontSize = 16.sp)
-
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.medium),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(24.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = rememberImagePainter(
+                            data = R.drawable.profile,
+                            builder = {
+                                placeholder(R.drawable.profileimage) // Add a placeholder image
+                                error(R.drawable.profileimage) // Add an error image
+                            }
+                        ),
+                        contentDescription = "Profile Image",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary),
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = profile.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, fontSize = 30.sp)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = profile.email, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(text = "Phone:", style = MaterialTheme.typography.titleMedium)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = profile.phone, style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+            }
         }
     }
 }
