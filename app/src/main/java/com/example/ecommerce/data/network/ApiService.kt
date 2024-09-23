@@ -4,13 +4,17 @@ import com.example.ecommerce.data.model.Banners
 import com.example.ecommerce.data.model.Categories
 import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
+import com.example.ecommerce.data.model.Logout
 import com.example.ecommerce.data.model.Products
+import com.example.ecommerce.data.model.Profile
+import com.example.ecommerce.data.model.SearchRequest
 import com.example.ecommerce.data.model.SignUpRequest
 import com.example.ecommerce.data.model.SignUpResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiService {
     @POST("login")
@@ -27,4 +31,23 @@ interface ApiService {
 
     @GET("banners")
     suspend fun getBanners() : Response<Banners>
+
+    @GET("products")
+    suspend fun getProductsByCategory(@Query("category_id") categoryId: Int): Response<Products>
+
+    @GET("products")
+    suspend fun getProductDetails(@Query("product_id") productId: Int): Response<Products>
+
+    @GET("profile")
+    suspend fun getProfile(): Response<Profile>
+
+    @POST("products/search")
+    suspend fun getSearch(@Body searchRequest: SearchRequest) : Response<Products>
+
+    @POST("logout")
+    suspend fun getLogout() : Response<Logout>
+
+
+
+
 }
