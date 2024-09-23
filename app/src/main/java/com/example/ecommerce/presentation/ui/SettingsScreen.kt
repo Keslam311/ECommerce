@@ -62,14 +62,14 @@ fun HeaderWithBackButton() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(30.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(20.dp, 30.dp),
+        horizontalArrangement = Arrangement.Start
     ) {
         Icon(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "Back",
             modifier = Modifier
-                .size(24.dp)
+                .size(25.dp)
                 .clickable(onClick = {
                     navigator.pop()
                 })
@@ -89,6 +89,7 @@ fun ProfileCardUI() {
         elevation = CardDefaults.cardElevation(0.dp),
         shape = Shapes.large
     ) {
+        Spacer(modifier = Modifier.weight(1f))
         Row(
             modifier = Modifier.padding(20.dp),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -102,13 +103,13 @@ fun ProfileCardUI() {
                     fontWeight = FontWeight.Bold,
                 )
 
-                Text(
-                    text = "UI.Stack.YT@gmail.com",
-                    fontFamily = Poppins,
-                    color = Color.Gray,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
+//                Text(
+//                    text = "UI.Stack.YT@gmail.com",
+//                    fontFamily = Poppins,
+//                    color = Color.Gray,
+//                    fontSize = 10.sp,
+//                    fontWeight = FontWeight.SemiBold,
+//                )
 
                 Button(
                     modifier = Modifier.padding(top = 10.dp),

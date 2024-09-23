@@ -2,6 +2,9 @@ package com.example.ecommerce.data.network
 
 import com.example.ecommerce.data.model.Banners
 import com.example.ecommerce.data.model.Categories
+import com.example.ecommerce.data.model.ChangePasswordRequest
+import com.example.ecommerce.data.model.ChangePasswordResponse
+import com.example.ecommerce.data.model.ChangeProfileRequest
 import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
 import com.example.ecommerce.data.model.Logout
@@ -14,6 +17,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface ApiService {
@@ -47,7 +51,10 @@ interface ApiService {
     @POST("logout")
     suspend fun getLogout() : Response<Logout>
 
+    @POST("change-password")
+    suspend fun getChangePassword(@Body changePasswordRequest: ChangePasswordRequest) : Response<ChangePasswordResponse>
 
-
+    @PUT("update-profile")
+    suspend fun getUpdateProfile(@Body changeProfileRequest: ChangeProfileRequest)  : Response<Profile>
 
 }

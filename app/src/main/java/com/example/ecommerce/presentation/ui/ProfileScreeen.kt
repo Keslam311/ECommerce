@@ -50,10 +50,11 @@ class ProfileScreen : Screen {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
+    val navigator = LocalNavigator.currentOrThrow
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Profile", fontSize = 20.sp, fontWeight = FontWeight.Bold) },
+                title = {},
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back to Home")
@@ -109,6 +110,28 @@ fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
                         Text(text = "Phone:", style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(text = profile.phone, style = MaterialTheme.typography.bodyMedium)
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Change Password Button
+                    Button(
+                        onClick = {
+                            navigator.push(ChangePassword())
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = "Change Password")
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Update Profile Button
+                    Button(
+                        onClick = {
+                            navigator.push(UpdateProfile())
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = "Update Profile")
                     }
                 }
             }
