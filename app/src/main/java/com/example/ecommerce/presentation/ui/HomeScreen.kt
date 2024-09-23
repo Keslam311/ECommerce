@@ -92,9 +92,7 @@ fun HomeScreenContent(
             BottomAppBar(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                IconButton(modifier = Modifier.weight(1f),onClick = { /* Navigate to Home Screen */ }) {
-                    Icon(imageVector = Icons.Default.Home, contentDescription = "Home")
-                }
+                
                 IconButton(modifier = Modifier.weight(1f),onClick = { /* Navigate to Favorites Screen */ }) {
                     Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favorites")
                 }
