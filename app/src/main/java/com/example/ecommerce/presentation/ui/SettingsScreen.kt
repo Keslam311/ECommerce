@@ -326,6 +326,7 @@ fun SupportItem(icon: Int, mainText: String, onClick: () -> Unit) {
         }
     }
 }
+
 @Composable
 fun LogoutButton() {
     val navigator = LocalNavigator.currentOrThrow
@@ -333,10 +334,6 @@ fun LogoutButton() {
     val LOGOUTViewModel: LogoutViewModel = hiltViewModel()
     val logoutResponse = LOGOUTViewModel.logoutResponse.collectAsState()
     val context = LocalContext.current
-
-    if (logoutResponse.value != null) {
-        navigator.push(LoginScreen())
-    }
 
     Button(
         onClick = {
