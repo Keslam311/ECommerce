@@ -4,6 +4,7 @@ import com.example.ecommerce.data.model.Banners
 import com.example.ecommerce.data.model.Categories
 import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
+import com.example.ecommerce.data.model.Logout
 import com.example.ecommerce.data.model.Products
 import com.example.ecommerce.data.model.Profile
 import com.example.ecommerce.data.model.SearchRequest
@@ -42,6 +43,10 @@ interface ApiService {
 
     @POST("products/search")
     suspend fun getSearch(@Body searchRequest: SearchRequest) : Response<Products>
+
+    @POST("logout")
+    suspend fun getLogout() : Response<Logout>
+
 
 
 

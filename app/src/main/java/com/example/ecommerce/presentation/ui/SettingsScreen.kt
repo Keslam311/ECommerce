@@ -6,22 +6,27 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
+import android.widget.Toast
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -31,6 +36,8 @@ import com.example.ecommerce.ui.theme.PrimaryColor
 import com.example.ecommerce.ui.theme.SecondaryColor
 import com.example.ecommerce.ui.theme.Shapes
 import com.example.ecommerce.R
+import com.example.ecommerce.presentation.viewModel.LogoutViewModel
+import com.example.ecommerce.presentation.viewModel.ProfileViewModel
 
 class Settings : Screen {
     @Composable
@@ -265,6 +272,7 @@ fun SupportOptionsUI() {
             mainText = "About",
             onClick = {}
         )
+        LogoutButton()
     }
 }
 @Composable
@@ -318,3 +326,57 @@ fun SupportItem(icon: Int, mainText: String, onClick: () -> Unit) {
         }
     }
 }
+@Composable
+fun LogoutButton() {
+    val navigator = LocalNavigator.currentOrThrow
+    val viewModel: ProfileViewModel = hiltViewModel()
+    val LOGOUTViewModel: LogoutViewModel = hiltViewModel()
+    val logoutResponse = LOGOUTViewModel.logoutResponse.collectAsState()
+    val context = LocalContext.current
+
+    if (logoutResponse.value != null) {
+        navigator.push(LoginScreen())
+    }
+
+    Button(
+        onClick = {
+            LOGOUTViewModel.logout(
+                onSuccess = {
+                    navigator.push(LoginScreen())
+                },
+                onError = { errorMessage ->
+                    Toast.makeText(context,errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            )
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.White,
+            contentColor = Color.Red
+        ),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 0.dp
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Logout",
+                fontFamily = Poppins,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Default.ExitToApp,
+                contentDescription = "Logout",
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
