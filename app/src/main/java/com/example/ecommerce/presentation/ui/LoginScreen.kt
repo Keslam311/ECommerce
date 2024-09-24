@@ -1,7 +1,9 @@
 package com.example.ecommerce.presentation.ui
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import androidx.activity.compose.BackHandler
 import android.content.Context.MODE_PRIVATE
 import android.util.Log
 import android.widget.Toast
@@ -59,6 +61,12 @@ class LoginScreen : Screen {
         val viewModel: LoginViewModel = hiltViewModel()
         val sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val token = sharedPreferences.getString("token", null)
+
+        // Handle back navigation
+        BackHandler {
+            // Close the app or perform any action you want
+            (context as? Activity)?.finish()
+        }
 
         Column(
             modifier = Modifier

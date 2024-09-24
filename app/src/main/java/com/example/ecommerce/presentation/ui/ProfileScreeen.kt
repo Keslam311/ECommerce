@@ -28,6 +28,10 @@ import coil.compose.rememberImagePainter
 import com.example.ecommerce.R
 import com.example.ecommerce.data.model.ProfileDataClass
 import com.example.ecommerce.presentation.viewModel.ProfileViewModel
+import com.example.ecommerce.ui.theme.Poppins
+import com.example.ecommerce.ui.theme.PrimaryColor
+import com.example.ecommerce.ui.theme.SecondaryColor
+import com.example.ecommerce.ui.theme.Shapes
 
 class ProfileScreen : Screen {
     @Composable
@@ -118,20 +122,43 @@ fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
                         onClick = {
                             navigator.push(ChangePassword())
                         },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(text = "Change Password")
+                        colors = ButtonDefaults.buttonColors(PrimaryColor),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp)
+                            .padding(top = 20.dp),
+                        contentPadding = PaddingValues(vertical = 14.dp),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 0.dp,
+                            pressedElevation = 2.dp
+                        ),
+                        shape = Shapes.medium                    ) {
+                        Text(text = "Change Password",  fontFamily = Poppins,
+                            color = SecondaryColor,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold)
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
 
                     // Update Profile Button
                     Button(
                         onClick = {
-                            navigator.push(UpdateProfile())
+                            navigator.push(UpdateProfile(profile))
                         },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(text = "Update Profile")
+                        colors = ButtonDefaults.buttonColors(PrimaryColor),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp)
+                            .padding(top = 20.dp),
+                        contentPadding = PaddingValues(vertical = 14.dp),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 0.dp,
+                            pressedElevation = 2.dp
+                        ),
+                        shape = Shapes.medium                    ) {
+                        Text(text = "Update Profile", fontFamily = Poppins,
+                            color = SecondaryColor,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold)
                     }
                 }
             }
