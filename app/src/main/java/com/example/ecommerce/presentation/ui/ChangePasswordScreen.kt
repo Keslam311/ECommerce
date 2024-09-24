@@ -1,11 +1,12 @@
 package com.example.ecommerce.presentation.ui
 
-
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -16,7 +17,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
@@ -27,6 +27,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +39,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.ecommerce.R
 import com.example.ecommerce.data.model.ChangePasswordResponse
 import com.example.ecommerce.presentation.viewModel.ChangePasswordViewModel
-import com.example.ecommerce.ui.theme.BackgroundColor
 import com.example.ecommerce.ui.theme.Poppins
 import com.example.ecommerce.ui.theme.PrimaryColor
 import com.example.ecommerce.ui.theme.SecondaryColor
@@ -58,6 +59,8 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
     var newPassword by remember { mutableStateOf("") }
     val navigator = LocalNavigator.currentOrThrow
     val context = LocalContext.current
+    var isCurrentPasswordVisible by remember { mutableStateOf(false) }
+    var isNewPasswordVisible by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -104,8 +107,9 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                         fontSize = 12.sp
                     )
                     OutlinedTextField(
-                        value = currentPassword, onValueChange = { currentPassword = it },
-                        Modifier
+                        value = currentPassword,
+                        onValueChange = { currentPassword = it },
+                        modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp)
                             .padding(top = 20.dp),
@@ -117,6 +121,11 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                         ),
                         shape = Shapes.medium,
                         singleLine = true,
+                        visualTransformation = if (isCurrentPasswordVisible) {
+                            VisualTransformation.None
+                        } else {
+                            PasswordVisualTransformation()
+                        },
                         placeholder = {
                             Text(text = "Current Password", color = Color.Gray)
                         },
@@ -124,13 +133,22 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             fontFamily = Poppins
-                        )
+                        ),
+                        trailingIcon = {
+                            IconButton(onClick = { isCurrentPasswordVisible = !isCurrentPasswordVisible }) {
+                                Icon(
+                                    imageVector = if (isCurrentPasswordVisible) Icons.Filled.Close else Icons.Filled.Done,
+                                    contentDescription = if (isCurrentPasswordVisible) "Hide password" else "Show password"
+                                )
+                            }
+                        }
                     )
                     Spacer(modifier = Modifier.height(10.dp))
 
                     OutlinedTextField(
-                        value = newPassword, onValueChange = { newPassword = it },
-                        Modifier
+                        value = newPassword,
+                        onValueChange = { newPassword = it },
+                        modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp)
                             .padding(top = 20.dp),
@@ -142,6 +160,11 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                         ),
                         shape = Shapes.medium,
                         singleLine = true,
+                        visualTransformation = if (isNewPasswordVisible) {
+                            VisualTransformation.None
+                        } else {
+                            PasswordVisualTransformation()
+                        },
                         placeholder = {
                             Text(text = "New Password", color = Color.Gray)
                         },
@@ -149,7 +172,15 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             fontFamily = Poppins
-                        )
+                        ),
+                        trailingIcon = {
+                            IconButton(onClick = { isNewPasswordVisible = !isNewPasswordVisible }) {
+                                Icon(
+                                    imageVector = if (isNewPasswordVisible) Icons.Filled.Close else Icons.Filled.Done,
+                                    contentDescription = if (isNewPasswordVisible) "Hide password" else "Show password"
+                                )
+                            }
+                        }
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Button(

@@ -115,15 +115,7 @@ class LoginScreen : Screen {
                     cursorColor = Color(0xFFFF9800)
                 )
             )
-            Spacer(modifier = Modifier.height(15.dp))
 
-            Text(
-                text = "Forget Password",
-                color = Color(0xFFFF9800),
-                modifier = Modifier.clickable {
-                    // Handle forget password action
-                }
-            )
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(

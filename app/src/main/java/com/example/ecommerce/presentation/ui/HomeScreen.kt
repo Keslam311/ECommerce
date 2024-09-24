@@ -100,7 +100,7 @@ fun HomeScreenContent(
                             model = banners[index].image,
                             contentDescription = "Banner",
                             modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.FillHeight
+                            contentScale = ContentScale.Crop
                         )
                     }
                 }
