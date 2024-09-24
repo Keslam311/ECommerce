@@ -10,6 +10,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.example.ecommerce.interceptor.AuthInterceptor
 import com.example.ecommerce.presentation.ui.HomeScreen
 import com.example.ecommerce.presentation.ui.LoginScreen
+import com.example.ecommerce.presentation.ui.Start
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     authInterceptor.setToken(token ?: "")
                     Navigator(screen = HomeScreen())
                 }else{
-                    Navigator(screen = LoginScreen())
+                    Navigator(screen = Start())
                 }
 
         }
