@@ -336,6 +336,7 @@ fun LogoutButton() {
     val logoutResponse = LOGOUTViewModel.logoutResponse.collectAsState()
     val context = LocalContext.current
 
+
     Button(
         onClick = {
             LOGOUTViewModel.logout(

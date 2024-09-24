@@ -29,11 +29,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.ecommerce.R
+import com.example.ecommerce.data.model.ProfileDataClass
 import com.example.ecommerce.presentation.viewModel.ChangeProfileViewModel
+import com.example.ecommerce.presentation.viewModel.ProfileViewModel
 import com.example.ecommerce.ui.theme.Poppins
 import com.example.ecommerce.ui.theme.PrimaryColor
 import com.example.ecommerce.ui.theme.SecondaryColor
@@ -45,6 +48,7 @@ class UpdateProfile(): Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
+
         ChangeProfileScreen(
             onSuccess = {
                 Toast.makeText(
@@ -60,7 +64,7 @@ class UpdateProfile(): Screen {
         )
     }
 }
-
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangeProfileScreen(
@@ -68,13 +72,26 @@ fun ChangeProfileScreen(
     onSuccess: () -> Unit,
     onError: (String) -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var image by remember { mutableStateOf("") }
-    val isLoading by viewModel.isLoading.collectAsState()
+
+    val profileViewModel : ProfileViewModel = hiltViewModel()
+    val profileResponse by profileViewModel.profileState.collectAsState()
     val navigator = LocalNavigator.currentOrThrow
+
+
+    LaunchedEffect(Unit) {
+        profileViewModel.getProfile { errorMessage ->
+            Log.w("Error", "Error fetching profile: $errorMessage")
+        }
+    }
+    profileResponse?.let {
+        ProfileContent(profile = it.data, onBackClick = { navigator.pop() })
+    }
+    val isLoading by viewModel.isLoading.collectAsState()
+    var name by remember { mutableStateOf(profileResponse?.data?.name ?: "") }
+    var email by remember { mutableStateOf(profileResponse?.data?.email ?: "") }
+    var phone by remember { mutableStateOf(profileResponse?.data?.phone ?: "") }
+    val sharedPreferences = LocalContext.current.getSharedPreferences("MyPrefs", android.content.Context.MODE_PRIVATE)
+
 
     Scaffold(
         topBar = {
@@ -177,71 +194,21 @@ fun ChangeProfileScreen(
                 )
             )
 
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                 Modifier
-                        .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(top = 20.dp),
-                visualTransformation = PasswordVisualTransformation(),
-                colors = TextFieldDefaults.textFieldColors(
-                    SecondaryColor,
-                    cursorColor = PrimaryColor,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                shape = Shapes.medium,
-                singleLine = true,
-                placeholder = {
-                    Text(text = "Password", color = Color.Gray)
-                },
-                textStyle = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = Poppins
-                )
-            )
 
-            OutlinedTextField(
-                value = image,
-                onValueChange = { image = it },
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(top = 20.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    SecondaryColor,
-                    cursorColor = PrimaryColor,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                shape = Shapes.medium,
-                singleLine = true,
-                placeholder = {
-                    Text(text = "Profile Image URL", color = Color.Gray)
-                },
-                textStyle = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = Poppins
-                )
-            )
+
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
-                    if (name.isNotBlank() && email.isNotBlank() && phone.isNotBlank() && password.isNotBlank() && image.isNotBlank()) {
                         viewModel.changeProfile(
-                            email,image,name,password,phone,
+                            email=email,image = profileResponse?.data?.image?:"", name = name,
+                            password = sharedPreferences.getString("Password", "")?:"", phone = phone,
                             onSuccess = {
                                 onSuccess()
                             },
                             onError = onError
                         )
-                    } else {
-                        onError("All fields are required")
-                    }
                 },
                 enabled = !isLoading,
                 colors = ButtonDefaults.buttonColors(PrimaryColor),
@@ -265,5 +232,147 @@ fun ChangeProfileScreen(
         }
     }
 }
+*/
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChangeProfileScreen(
+    viewModel: ChangeProfileViewModel = hiltViewModel(),
+    onSuccess: () -> Unit,
+    onError: (String) -> Unit
+) {
+    val profileViewModel: ProfileViewModel = hiltViewModel()
+    val profileResponse by profileViewModel.profileState.collectAsState()
+    val navigator = LocalNavigator.currentOrThrow
+    val context = LocalContext.current
+
+    // Fetch profile data only once when the screen is first displayed
+    LaunchedEffect(Unit) {
+        profileViewModel.getProfile { errorMessage ->
+            Log.e("ChangeProfileScreen", "Error fetching profile: $errorMessage")
+            onError("Failed to fetch profile data.")
+        }
+    }
+
+    // Handle loading state
+    val isLoading by viewModel.isLoading.collectAsState()
+    var name by remember { mutableStateOf(profileResponse?.data?.name ?: "") }
+    var email by remember { mutableStateOf(profileResponse?.data?.email ?: "") }
+    var phone by remember { mutableStateOf(profileResponse?.data?.phone ?: "") }
+    val sharedPreferences = context.getSharedPreferences("MyPrefs", android.content.Context.MODE_PRIVATE)
+
+    // Profile Content
+    profileResponse?.let { profileData ->
+        ProfileContent(profile = profileData.data, onBackClick = { navigator.pop() })
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        IconButton(onClick = { navigator.pop() }) {
+                            Icon(Icons.Filled.ArrowBack, contentDescription = "Back to Profile")
+                        }
+                    },
+                )
+            }
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.updata),
+                    contentDescription = null,
+                    modifier = Modifier.size(240.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Repeated OutlinedTextField code can be reduced to a function
+                ProfileTextField(value = name, onValueChange = { name = it }, placeholder = "Name")
+                ProfileTextField(value = email, onValueChange = { email = it }, placeholder = "Email")
+                ProfileTextField(value = phone, onValueChange = { phone = it }, placeholder = "Phone")
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                UpdateProfileButton(
+                    isLoading = isLoading,
+                    onClick = {
+                        viewModel.changeProfile(
+                            email = email,
+                            image = profileData.data.image ?: "",
+                            name = name,
+                            password = sharedPreferences.getString("Password", "") ?: "",
+                            phone = phone,
+                            onSuccess = { onSuccess() },
+                            onError = { error ->
+                                Log.e("ChangeProfileScreen", "Profile update failed: $error")
+                                onError("Failed to update profile.")
+                            }
+                        )
+                    }
+                )
+            }
+        }
+    } ?: run {
+        // Handle the case where profileResponse is null, perhaps show a loading spinner or an error message
+        CircularProgressIndicator()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProfileTextField(value: String, onValueChange: (String) -> Unit, placeholder: String) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .padding(top = 20.dp),
+        colors = TextFieldDefaults.textFieldColors(
+            SecondaryColor,
+            cursorColor = PrimaryColor,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+        shape = Shapes.medium,
+        singleLine = true,
+        placeholder = {
+            Text(text = placeholder, color = Color.Gray)
+        },
+        textStyle = TextStyle(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            fontFamily = Poppins
+        )
+    )
+}
+
+@Composable
+fun UpdateProfileButton(isLoading: Boolean, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        enabled = !isLoading,
+        colors = ButtonDefaults.buttonColors(PrimaryColor),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .padding(top = 20.dp),
+        contentPadding = PaddingValues(vertical = 14.dp),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 2.dp
+        ),
+        shape = Shapes.medium
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+        } else {
+            Text("Update Profile")
+        }
+    }
+}
 

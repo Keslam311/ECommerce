@@ -31,6 +31,7 @@ class LogoutViewModel @Inject constructor(
                     _logoutResponse.value = response.body()
                     authInterceptor.setToken("")
                     sharedPreferences.edit().remove("token").apply()
+                    sharedPreferences.edit().remove("password").apply()
                     Log.d("LogoutViewModel", " zamzam ${sharedPreferences.getString("token", "")}")
                     onSuccess()
                 } else {

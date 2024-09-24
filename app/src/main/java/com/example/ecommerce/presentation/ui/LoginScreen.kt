@@ -155,6 +155,7 @@ class LoginScreen : Screen {
                             Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT)
                                 .show()
                             navigator.push(HomeScreen())
+                            sharedPreferences.edit().putString("Password", password.text).apply()
                         },
                         onError = {
                             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
