@@ -59,7 +59,7 @@ class LoginScreen : Screen {
                 onBackPressedCallback.remove()
             }
         }
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

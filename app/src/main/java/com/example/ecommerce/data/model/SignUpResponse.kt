@@ -1,9 +1,7 @@
 package com.example.ecommerce.data.model
 
-import com.example.ecommerce.data.model.DataXXX
-
 data class SignUpResponse(
-    val `data`: DataXXX,
+    val `data`: SignUpResponseDataClass,
     val message: String,
     val status: Boolean
 )

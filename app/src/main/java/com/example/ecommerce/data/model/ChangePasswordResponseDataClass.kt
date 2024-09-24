@@ -1,5 +1,5 @@
 package com.example.ecommerce.data.model
 
-data class DataXXXXXX(
+data class ChangePasswordResponseDataClass(
     val email: String
 )

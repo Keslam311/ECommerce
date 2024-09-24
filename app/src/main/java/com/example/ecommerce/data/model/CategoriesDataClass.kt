@@ -1,8 +1,6 @@
 package com.example.ecommerce.data.model
 
-import com.example.ecommerce.data.model.CategoryItem
-
-data class DataXXXX(
+data class CategoriesDataClass(
     val current_page: Int,
     val `data`: List<CategoryItem>,
     val first_page_url: String,

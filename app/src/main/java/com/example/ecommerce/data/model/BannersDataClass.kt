@@ -1,6 +1,6 @@
 package com.example.ecommerce.data.model
 
-data class DataX(
+data class BannersDataClass(
     val category: Any,
     val id: Int,
     val image: String,
