@@ -132,7 +132,8 @@ fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
                             defaultElevation = 0.dp,
                             pressedElevation = 2.dp
                         ),
-                        shape = Shapes.medium                    ) {
+                        shape = Shapes.medium
+                    ) {
                         Text(text = "Change Password",  fontFamily = Poppins,
                             color = SecondaryColor,
                             fontSize = 14.sp,
@@ -154,7 +155,8 @@ fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
                             defaultElevation = 0.dp,
                             pressedElevation = 2.dp
                         ),
-                        shape = Shapes.medium                    ) {
+                        shape = Shapes.medium
+                    ) {
                         Text(text = "Update Profile", fontFamily = Poppins,
                             color = SecondaryColor,
                             fontSize = 14.sp,
