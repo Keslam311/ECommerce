@@ -54,7 +54,7 @@ class HomeScreen : Screen {
         HomeScreenContent(bannersViewModel,categoriesViewModel)
     }
 }
-
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreenContent(
@@ -83,11 +83,12 @@ fun HomeScreenContent(
             }
         },
         content = { paddingValues ->
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                ,
                 horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+            ) {
                 // Banners
                 HorizontalPager(
                     state = pagerState,
@@ -104,12 +105,13 @@ fun HomeScreenContent(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+
+                // Removed unnecessary Spacer to eliminate space above the image
                 Text(
                     text = "Categories",
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.padding(16.dp),
-                    textAlign = TextAlign.Center // This is the correct value
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -126,6 +128,7 @@ fun HomeScreenContent(
         }
     )
 }
+
 
 @Composable
 fun CategoryItem(category: CategoryItem) {
