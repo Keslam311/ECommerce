@@ -71,7 +71,7 @@ fun HomeScreenContent(
     Scaffold(
         bottomBar = {
             BottomAppBar(modifier = Modifier.fillMaxWidth()) {
-                IconButton(modifier = Modifier.weight(1f), onClick = { /* Navigate to Favorites Screen */ }) {
+                IconButton(modifier = Modifier.weight(1f), onClick = {  }) {
                     Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favorites")
                 }
                 IconButton(modifier = Modifier.weight(1f), onClick = { /* Navigate to Cart Screen */ }) {
