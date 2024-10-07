@@ -10,7 +10,6 @@ import com.example.ecommerce.data.model.ChangePasswordResponse
 import com.example.ecommerce.data.model.ChangeProfileRequest
 import com.example.ecommerce.data.model.GetAddresses
 import com.example.ecommerce.data.model.GetAddressesResponse
-import com.example.ecommerce.data.model.GetFavoritesResponse
 import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
 import com.example.ecommerce.data.model.Logout
@@ -49,6 +48,9 @@ interface ApiService {
     suspend fun getProductsByCategory(@Query("category_id") categoryId: Int): Response<Products>
 
     @GET("products")
+    suspend fun getAllProduct():Response<Products>
+
+    @GET("products")
     suspend fun getProductDetails(@Query("product_id") productId: Int): Response<Products>
 
     @GET("profile")
@@ -77,9 +79,6 @@ interface ApiService {
 
     @DELETE("addresses/{id}")
     suspend fun getDeleteAddresses(@Path("id") id: Int) : Response<AddressesResponse>
-
-    @GET("favorites")
-    suspend fun getFavorites() : Response<GetFavoritesResponse>
 
     @POST("favorites")
     suspend fun addOrDeleteFavorites(@Body productId: Int) : Response<AddOrDeleteResponse>

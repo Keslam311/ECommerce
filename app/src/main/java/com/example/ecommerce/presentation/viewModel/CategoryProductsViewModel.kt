@@ -12,9 +12,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CategoryProductsViewModel @Inject constructor(private val apiService: ApiService) : ViewModel() {
+class CategoryProductsViewModel @Inject constructor(private val apiService: ApiService) :
+    ViewModel() {
+
     private val _categoryProducts = MutableStateFlow<Products?>(null)
     val categoryProducts: StateFlow<Products?> get() = _categoryProducts
+
+    private val _allProducts = MutableStateFlow<Products?>(null)
+    val allProducts: StateFlow<Products?> get() = _allProducts
+
     private var currentCategoryId: Int? = null
 
     fun setCategoryId(id: Int) {
@@ -44,4 +50,18 @@ class CategoryProductsViewModel @Inject constructor(private val apiService: ApiS
             }
         }
     }
+
+    fun getAllProduct() {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getAllProduct()
+                if (response.isSuccessful) {
+                    _allProducts.value = response.body()
+                }
+            }catch (ex: Exception) {
+                _allProducts.value = null
+            }
+        }
+    }
+
 }
