@@ -26,7 +26,8 @@ import com.example.ecommerce.presentation.viewModel.CategoryProductsViewModel
 import com.example.ecommerce.presentation.viewModel.SearchViewModel
 
 class CategoryProductsScreen(
-    private val categoryId: Int
+    private val categoryId: Int,
+    private val name:String
 ) : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -37,10 +38,9 @@ class CategoryProductsScreen(
         var searchText by remember { mutableStateOf("") }
 
         LaunchedEffect(categoryId) {
-            viewModel.setCategoryId(categoryId)
+            viewModel.getProducts(categoryId)
         }
 
-        // تنفيذ البحث عند تغيير searchText باستخدام LaunchedEffect
         LaunchedEffect(searchText) {
             searchViewModel.getProductsSearch(searchText)
         }
@@ -48,7 +48,7 @@ class CategoryProductsScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "Products") },
+                    title = { Text(text =name) },
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {
                             Icon(Icons.Filled.ArrowBack, contentDescription = "Back to Home")
@@ -102,7 +102,7 @@ class CategoryProductsScreen(
 @Composable
 fun ProductGridState(
     productsState: Products?,
-    onProductClick: (Int) -> Unit
+    onProductClick: (ProductItemSmall) -> Unit
 ) {
     when {
         productsState?.data?.data != null && productsState.status -> {
@@ -129,7 +129,7 @@ fun ProductGridState(
 @Composable
 fun ProductGrid(
     products: List<ProductItemSmall>,
-    onProductClick: (Int) -> Unit
+    onProductClick: (ProductItemSmall) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -137,7 +137,7 @@ fun ProductGrid(
         contentPadding = PaddingValues(8.dp)
     ) {
         items(products) { product ->
-            ProductBox(product = product, onClick = { onProductClick(product.id) })
+            ProductBox(product = product, onClick = { onProductClick(product) })
         }
     }
 }

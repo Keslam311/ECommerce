@@ -103,14 +103,6 @@ fun ProfileCardUI() {
                     fontWeight = FontWeight.Bold,
                 )
 
-//                Text(
-//                    text = "UI.Stack.YT@gmail.com",
-//                    fontFamily = Poppins,
-//                    color = Color.Gray,
-//                    fontSize = 10.sp,
-//                    fontWeight = FontWeight.SemiBold,
-//                )
-
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
                     onClick = {
@@ -170,7 +162,14 @@ fun GeneralOptionsUI() {
                 navigator.push(PreviewCustomizationScreen())
             }
         )
-//        GeneralSettingItem()
+        GeneralSettingItem(
+            icon = R.drawable.ic_more,
+            mainText = "Address",
+            subText = "Address to your account",
+            onClick = {
+                navigator.push(GetAddressesScreen())
+            }
+        )
     }
 }
 @Composable

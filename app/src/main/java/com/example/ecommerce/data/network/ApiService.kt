@@ -8,7 +8,6 @@ import com.example.ecommerce.data.model.ChangeProfileRequest
 import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
 import com.example.ecommerce.data.model.Logout
-import com.example.ecommerce.data.model.ProductItemSmall
 import com.example.ecommerce.data.model.Products
 import com.example.ecommerce.data.model.Profile
 import com.example.ecommerce.data.model.SearchRequest
@@ -57,15 +56,5 @@ interface ApiService {
 
     @PUT("update-profile")
     suspend fun getUpdateProfile(@Body changeProfileRequest: ChangeProfileRequest)  : Response<Profile>
-
-    // Favorites API methods
-    @POST("favorites/add")
-    suspend fun addToFavorites(@Body product: ProductItemSmall): Response<Unit>
-
-    @POST("favorites/remove")
-    suspend fun removeFromFavorites(@Body productId: Int): Response<Unit>
-
-    @GET("favorites")
-    suspend fun getFavorites(): Response<List<ProductItemSmall>>
 
 }

@@ -1,8 +1,8 @@
 package com.example.ecommerce.data.model
 
-data class Data(
+data class ProductsDataClass(
     val current_page: Int,
-    val `data`: List<DataX>,
+    val `data`: List<ProductItemSmall>,
     val first_page_url: String,
     val from: Int,
     val last_page: Int,

@@ -5,4 +5,15 @@
     <string name="start_screen2_subtitle">You will fiend every thing you need</string>
     <string name="start_screen3_subtitle">We show easy way to shop Just stay at home with us</string>
     <string name="start_screen3_Button">Get Started</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="favorite">Favorite</string>
+    <string name="added_to_favorites">Added to Favorites</string>
+    <string name="removed_from_favorites">Removed from Favorites</string>
+    <string name="error_occurred">Error occurred</string>
+    <string name="price_label"> Price</string>
+    <string name="read_more">Read more</string>
+    <string name="read_less">Read less</string>
+
 </resources>
+
+

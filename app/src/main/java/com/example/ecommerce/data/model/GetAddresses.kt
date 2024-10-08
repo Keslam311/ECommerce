@@ -1,8 +1,7 @@
 package com.example.ecommerce.data.model
 
-
-data class Products(
-    val `data`: ProductsDataClass,
+data class GetAddresses(
+    val `data`: GetAddressesResponse,
     val message: Any,
     val status: Boolean
 )
