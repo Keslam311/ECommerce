@@ -41,7 +41,6 @@ class CategoryProductsScreen(
             viewModel.setCategoryId(categoryId)
         }
 
-        // تنفيذ البحث عند تغيير searchText باستخدام LaunchedEffect
         LaunchedEffect(searchText) {
             searchViewModel.getProductsSearch(searchText)
         }

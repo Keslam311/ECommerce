@@ -189,6 +189,7 @@ import com.example.ecommerce.presentation.viewModel.CategoryProductsViewModel
 import cafe.adriel.voyager.navigator.currentOrThrow
 import androidx.compose.ui.res.stringResource
 import com.example.ecommerce.R
+import com.example.ecommerce.presentation.viewModel.FavoritesViewModel
 
 class ProductDetailsScreen(
     private val product: ProductItemSmall // Directly using product instead of products
@@ -207,6 +208,8 @@ fun ProductDetailCard(product: ProductItemSmall) {
     var isFavorite by remember { mutableStateOf(product.in_favorites) }
     val context = LocalContext.current
     val categoryViewModel: CategoryProductsViewModel = hiltViewModel()
+    val favoritesViewModel : FavoritesViewModel = hiltViewModel()
+
 
     // State to manage toast messages
     var toastMessage by remember { mutableStateOf("") }
@@ -253,7 +256,9 @@ fun ProductDetailCard(product: ProductItemSmall) {
             ) {
                 IconButton(onClick = {
                     isFavorite = !isFavorite // Update UI immediately
-                    categoryViewModel.favoriteAddOrDelete(product.id, onSuccess = {
+                    // قم بتحديث القائمة المحلية للمفضلات
+
+                    favoritesViewModel.favoriteAddOrDelete(product.id, onSuccess = {
                         toastMessage = if (isFavorite) "Added to favorites"
                         else "Removed from favorites"
 
@@ -286,7 +291,7 @@ fun ProductDetailCard(product: ProductItemSmall) {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "السعر: ${product.price} ج.م.",
+                        text = "Price: ${product.price}",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.secondary
                     )

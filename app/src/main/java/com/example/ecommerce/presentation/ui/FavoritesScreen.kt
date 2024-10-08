@@ -25,6 +25,7 @@ import com.example.ecommerce.presentation.viewModel.CategoryProductsViewModel
 
 class FavoritesScreen(
 ) : Screen {
+    /*
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -175,4 +176,152 @@ fun FavoriteErrorState(message: String) {
             modifier = Modifier.padding(16.dp)
         )
     }
+
+     */
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content() {
+        val viewModel: CategoryProductsViewModel = hiltViewModel()
+        val navigator = LocalNavigator.currentOrThrow
+        val productsState by viewModel.allProducts.collectAsState()
+
+        LaunchedEffect(Unit) {
+            viewModel.getAllProduct()
+        }
+
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = "Favorite Products") },
+                    navigationIcon = {
+                        IconButton(onClick = { navigator.pop() }) {
+                            Icon(Icons.Filled.ArrowBack, contentDescription = "Back to Home")
+                        }
+                    },
+                )
+            }
+        ) { padding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                // Content of the screen
+                FavoritesGridState(
+                    productsState = productsState,
+                    onProductClick = { productId ->
+                        navigator.push(ProductDetailsScreen(productId))
+                    }
+                )
+                // Show loading indicator if products are loading
+                if (productsState == null) {
+                    FavoriteLoadingState()
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun FavoritesGridState(
+        productsState: Products?,
+        onProductClick: (ProductItemSmall) -> Unit
+    ) {
+        when {
+            productsState?.data?.data != null && productsState.status -> {
+                FavoritesGrid(
+                    products = productsState.data.data,
+                    onProductClick = onProductClick
+                )
+            }
+
+            productsState?.status == false -> {
+                FavoriteErrorState(message = "Failed to load products.")
+            }
+
+            productsState == null -> {
+                FavoriteLoadingState()
+            }
+        }
+    }
+
+    @Composable
+    fun FavoritesGrid(
+        products: List<ProductItemSmall>,
+        onProductClick: (ProductItemSmall) -> Unit
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(8.dp)
+        ) {
+            items(products.filter { it.in_favorites }) { product ->
+                key(product.id) {
+                    FavoriteProductBox(
+                        product = product,
+                        onClick = { onProductClick(product) }
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun FavoriteProductBox(product: ProductItemSmall, onClick: () -> Unit) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick() }
+                .padding(8.dp)
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Image(
+                    painter = rememberAsyncImagePainter(product.image),
+                    contentDescription = product.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = product.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Price: \$${product.price}",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun FavoriteLoadingState() {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
+    @Composable
+    fun FavoriteErrorState(message: String) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+
 }
+

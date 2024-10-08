@@ -123,8 +123,8 @@ class CategoryProductsViewModel @Inject constructor(private val apiService: ApiS
     private val _allProducts = MutableStateFlow<Products?>(null)
     val allProducts: StateFlow<Products?> get() = _allProducts
 
-    private val _favoriteAddOrDelete = MutableStateFlow<AddOrDeleteResponse?>(null)
-    val favoriteAddOrDelete: StateFlow<AddOrDeleteResponse?> get() = _favoriteAddOrDelete
+//    private val _favoriteAddOrDelete = MutableStateFlow<AddOrDeleteResponse?>(null)
+//    val favoriteAddOrDelete: StateFlow<AddOrDeleteResponse?> get() = _favoriteAddOrDelete
 
     private var currentCategoryId: Int? = null
 
@@ -170,7 +170,7 @@ class CategoryProductsViewModel @Inject constructor(private val apiService: ApiS
             }
         }
     }
-
+/*
     fun favoriteAddOrDelete(
         productId: Int,
         onError:(String) -> Unit,
@@ -194,12 +194,12 @@ class CategoryProductsViewModel @Inject constructor(private val apiService: ApiS
             }
         }
     }
-
+*/
     private fun handleError(message: String) {
         Log.w("Error", message)
         // Optionally, update UI state to reflect the error if needed.
         _categoryProducts.value = null  // Reset the category products in case of an error
         _allProducts.value = null        // Reset the all products in case of an error
-        _favoriteAddOrDelete.value = null // Reset the favorite add or delete response
+      //  _favoriteAddOrDelete.value = null // Reset the favorite add or delete response
     }
 }

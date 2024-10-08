@@ -10,6 +10,7 @@ import com.example.ecommerce.data.model.ChangePasswordRequest
 import com.example.ecommerce.data.model.ChangePasswordResponse
 import com.example.ecommerce.data.model.ChangeProfileRequest
 import com.example.ecommerce.data.model.GetAddresses
+import com.example.ecommerce.data.model.GetFavorites
 import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
 import com.example.ecommerce.data.model.Logout
@@ -82,6 +83,9 @@ interface ApiService {
 
     @POST("favorites")
     suspend fun addOrDeleteFavorites(@Body id: AddOrDeleteFavoriteRequest) : Response<AddOrDeleteResponse>
+
+    @GET("favorites")
+    suspend fun getFavorites() : Response<GetFavorites>
 
 
 }
