@@ -2,15 +2,16 @@ package com.example.ecommerce.data.network
 
 import com.example.ecommerce.data.model.AddOrDeleteFavoriteRequest
 import com.example.ecommerce.data.model.AddOrDeleteResponse
+import com.example.ecommerce.data.model.AddOrRemoveCart
 import com.example.ecommerce.data.model.AddressesRequest
 import com.example.ecommerce.data.model.AddressesResponse
 import com.example.ecommerce.data.model.Banners
+import com.example.ecommerce.data.model.CartRequest
 import com.example.ecommerce.data.model.Categories
 import com.example.ecommerce.data.model.ChangePasswordRequest
 import com.example.ecommerce.data.model.ChangePasswordResponse
 import com.example.ecommerce.data.model.ChangeProfileRequest
 import com.example.ecommerce.data.model.GetAddresses
-import com.example.ecommerce.data.model.GetFavorites
 import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
 import com.example.ecommerce.data.model.Logout
@@ -80,6 +81,12 @@ interface ApiService {
 
     @POST("favorites")
     suspend fun addOrDeleteFavorites(@Body id: AddOrDeleteFavoriteRequest) : Response<AddOrDeleteResponse>
+    // New Cart Methods
+
+    @POST("carts")
+    suspend fun addOrDeleteCart(@Body id:CartRequest): Response<AddOrRemoveCart>
+
+
 
 
 

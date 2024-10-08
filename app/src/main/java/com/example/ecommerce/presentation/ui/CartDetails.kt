@@ -9,18 +9,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import coil.compose.rememberAsyncImagePainter
 import com.example.ecommerce.data.model.ProductItemSmall
@@ -28,45 +24,28 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import com.example.ecommerce.util.PreferencesManager
 import com.example.ecommerce.R
-import com.example.ecommerce.presentation.viewModel.CategoryProductsViewModel
-import com.example.ecommerce.presentation.viewModel.FavoritesViewModel
-import androidx.compose.material.icons.filled.ShoppingCart
-import com.example.ecommerce.presentation.viewModel.CartViewModel
 
-
-class ProductDetailsScreen(
-    private val product: ProductItemSmall // Directly using product instead of products
+class CartcardDetails(
+    private val product: ProductItemSmall
 ) : Screen {
     @Composable
     override fun Content() {
-        ProductDetailCard(product)
+        CartDetails(product)
     }
 }
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ProductDetailCard(product: ProductItemSmall) {
+fun CartDetails(product: ProductItemSmall) {
     val navigator = LocalNavigator.currentOrThrow
     val context = LocalContext.current
-    val categoryViewModel: CategoryProductsViewModel = hiltViewModel()
-    val favoritesViewModel: FavoritesViewModel = hiltViewModel()
-    val CartViewModel: CartViewModel = hiltViewModel()
 
     // State to manage toast messages
     var toastMessage by remember { mutableStateOf("") }
 
     // State to manage if description is expanded or not
     var isExpanded by remember { mutableStateOf(false) }
-
-    // Load favorite state from SharedPreferences
-    val isFavoriteState = PreferencesManager.isFavorite(context, product.id.toString())
-    var isFavorite by remember { mutableStateOf(isFavoriteState) }
-    val isInCartState = PreferencesManager.isInCart(context, product.id.toString())
-    var isInCart by remember { mutableStateOf(isInCartState )}
-
-
-
 
     // Handle showing the toast messages
     LaunchedEffect(toastMessage) {
@@ -106,14 +85,14 @@ fun ProductDetailCard(product: ProductItemSmall) {
                     .clip(MaterialTheme.shapes.medium)
             )
 
-            // Product Information and Favorite Icon
+            // Product Information and cart Icon
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.Start
             ) {
-                // Product Name and Favorite Icon in a Row
+                // Product Name and cart Icon in a Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -125,29 +104,13 @@ fun ProductDetailCard(product: ProductItemSmall) {
                         modifier = Modifier.weight(1f)
                     )
 
-                    IconButton(onClick = {
-                        isFavorite = !isFavorite
-                        PreferencesManager.setFavorite(context, product.id.toString(), isFavorite)
-                        favoritesViewModel.favoriteAddOrDelete(product.id, onSuccess = {
-                            toastMessage = if (isFavorite) "Added to favorites" else "Removed from favorites"
-                            categoryViewModel.getAllProduct()
-                        }, onError = {
-                            isFavorite = !isFavorite
-                            toastMessage = "Error occurred while updating favorites."
-                        })
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = stringResource(id = R.string.favorite),
-                            tint = if (isFavorite) Color.Red else Color.Gray,
-                        )
-                    }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Product Description with "Read more"
                 val formattedDescription = product.description.replace(Regex("\\. (?=[A-Za-z])"), ".\n")
+
                 Text(
                     text = formattedDescription,
                     style = MaterialTheme.typography.bodyMedium,
@@ -167,42 +130,14 @@ fun ProductDetailCard(product: ProductItemSmall) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Row for price and cart icon
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween // Align price and cart icon on opposite ends
-                ) {
-                    // Price Text
-                    Text(
-                        text = "${stringResource(id = R.string.price_label)}: ${product.price}",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    )
-
-                    // Cart Icon
-                    IconButton(onClick = {
-                        isInCart = !isInCart
-                        PreferencesManager.setInCart(context, product.id.toString(), isInCart)
-                        CartViewModel.cartAddOrDelete(product.id, onSuccess = {
-                            toastMessage = if (isFavorite) "Added to cart" else "Removed from cart"
-                            categoryViewModel.getAllProduct()
-                        }, onError = {
-                            isInCart = !isInCart
-                            toastMessage = "Error occurred while updating favorites."
-                        })
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.ShoppingCart, // Cart icon
-                            contentDescription = stringResource(id = R.string.cart),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
+                Text(
+                    text = "${stringResource(id = R.string.price_label)}: ${product.price}",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.secondary
+                    ),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
             }
         }
     }
