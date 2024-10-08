@@ -44,7 +44,7 @@ class CategoryProductsViewModel @Inject constructor(private val apiService: ApiS
     fun getAllProduct() {
         viewModelScope.launch {
             try {
-                val response = apiService.getAllProduct()
+                val response = apiService.getAllProducts()
                 if (response.isSuccessful) {
                     _allProducts.value = response.body()?.data?.data?.filter { it.in_favorites }
                 } else {

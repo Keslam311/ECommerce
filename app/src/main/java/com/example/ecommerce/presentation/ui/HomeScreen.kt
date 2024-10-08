@@ -134,7 +134,7 @@ fun CategoryItem(category: CategoryItem) {
         modifier = Modifier
             .padding(8.dp)
             .fillMaxSize()
-            .clickable { navigator.push(CategoryProductsScreen(categoryId = category.id)) },
+            .clickable { navigator.push(CategoryProductsScreen(categoryId = category.id, name = category.name)) },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
