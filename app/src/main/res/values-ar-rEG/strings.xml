@@ -6,5 +6,11 @@
     <string name="start_screen2_subtitle">ستجد كل ما تحتاجه هنا</string>
     <string name="start_screen3_subtitle">نقدم لك طريقة سهلة للتسوق، فقط ابق في المنزل معنا</string>
     <string name="start_screen3_Button">ابدأ الآن</string>
+    <string name="back_to_home">العودة إلى الصفحة الرئيسية</string>
+    <string name="favorite">المفضل</string>
+    <string name="added_to_favorites">تمت إضافته إلى المفضلة</string>
+    <string name="removed_from_favorites">تمت إزالته من المفضلة</string>
+    <string name="error_occurred">حدث خطأ</string>
+    </resources>
 
-</resources>
+

@@ -71,7 +71,7 @@ fun HomeScreenContent(
     Scaffold(
         bottomBar = {
             BottomAppBar(modifier = Modifier.fillMaxWidth()) {
-                IconButton(modifier = Modifier.weight(1f), onClick = {navigator.push(FavoritesScreen()) }) {
+                IconButton(modifier = Modifier.weight(1f), onClick = { navigator.push(FavoritesScreen()) }) {
                     Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favorites")
                 }
                 IconButton(modifier = Modifier.weight(1f), onClick = { /* Navigate to Cart Screen */ }) {
@@ -85,49 +85,61 @@ fun HomeScreenContent(
         content = { paddingValues ->
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                ,
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Banners
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.fillMaxHeight(0.3f),
-                    pageSize = PageSize.Fill,
-                    pageSpacing = 7.dp
-                ) { index ->
-                    Card {
-                        AsyncImage(
-                            model = banners[index].image,
-                            contentDescription = "Banner",
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
+                // Banners Section
+                if (banners.isNotEmpty()) {
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxHeight(0.3f),
+                        pageSize = PageSize.Fill,
+                        pageSpacing = 7.dp
+                    ) { index ->
+                        Card {
+                            AsyncImage(
+                                model = banners[index].image,
+                                contentDescription = "Banner",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                     }
+                } else {
+                    LoadingState()
                 }
 
-                // Removed unnecessary Spacer to eliminate space above the image
                 Text(
                     text = "Categories",
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.padding(16.dp),
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(16.dp))
 
                 // Categories Section
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    items(categories) { category ->
-                        CategoryItem(category = category)
+                if (categories.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        items(categories) { category ->
+                            CategoryItem(category = category)
+                        }
                     }
+                } else {
+                    Text(
+                        text = "No categories available.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(16.dp),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
     )
 }
+
 
 
 @Composable
@@ -158,67 +170,3 @@ fun CategoryItem(category: CategoryItem) {
     }
 }
 
-@Composable
-fun ProductItem(product: ProductItemSmall) {
-    Card(
-        modifier = Modifier
-            .width(180.dp)
-            .padding(8.dp)
-            .clickable { /* Navigate to Product Details Screen */ },
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Image(
-                painter = rememberAsyncImagePainter(product.image),
-                contentDescription = product.name,
-                modifier = Modifier
-                    .height(120.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Price: $${product.price}",
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
-@Composable
-fun ProductItemSmall(product: ProductItemSmall) {
-    Card(
-        modifier = Modifier
-            .width(120.dp)
-            .padding(8.dp)
-            .clickable { /* Navigate to Product Details Screen */ },
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Image(
-                painter = rememberAsyncImagePainter(product.image),
-                contentDescription = product.name,
-                modifier = Modifier
-                    .height(80.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = product.name,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = "Price: $${product.price}",
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}

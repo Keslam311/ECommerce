@@ -1,4 +1,3 @@
-
 package com.example.ecommerce.presentation.ui
 
 import androidx.compose.foundation.Image
@@ -6,9 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -26,7 +22,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.ecommerce.data.model.ProductItemSmall
 import com.example.ecommerce.data.model.Products
 import com.example.ecommerce.presentation.viewModel.CategoryProductsViewModel
-import com.example.ecommerce.presentation.viewModel.SearchViewModel
 
 class FavoritesScreen(
 ) : Screen {
@@ -34,23 +29,17 @@ class FavoritesScreen(
     @Composable
     override fun Content() {
         val viewModel: CategoryProductsViewModel = hiltViewModel()
-        val searchViewModel: SearchViewModel = hiltViewModel()
         val navigator = LocalNavigator.currentOrThrow
-        var searchText by remember { mutableStateOf("") }
+        val productsState by viewModel.allProducts.collectAsState()
 
         LaunchedEffect(Unit) {
             viewModel.getAllProduct()
         }
 
-        // تنفيذ البحث عند تغيير searchText باستخدام LaunchedEffect
-        LaunchedEffect(searchText) {
-            searchViewModel.getProductsSearch(searchText)
-        }
-
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "Products") },
+                    title = { Text(text = "Favorites Products") },
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {
                             Icon(Icons.Filled.ArrowBack, contentDescription = "Back to Home")
@@ -59,52 +48,32 @@ class FavoritesScreen(
                 )
             }
         ) { padding ->
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
             ) {
-                OutlinedTextField(
-                    value = searchText,
-                    onValueChange = { newText ->
-                        searchText = newText
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    placeholder = { Text("Search Products") }
+                // Content of the screen
+                FavoritesGridState(
+                    productsState = productsState,
+                    onProductClick = { productId ->
+                        navigator.push(ProductDetailsScreen(productId))
+                    }
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                if (searchText.isBlank()) {
-                    // عرض منتجات الفئة
-                    val productsState by viewModel.allProducts.collectAsState()
-                    FavoritesGridState(
-                        productsState = productsState,
-                        onProductClick = { productId ->
-                            navigator.push(ProductDetailsScreen(productId))
-                        }
-                    )
-                } else {
-                    // عرض نتائج البحث
-                    val searchState by searchViewModel.productSearch.collectAsState()
-                    FavoritesGridState(
-                        productsState = searchState,
-                        onProductClick = { productId ->
-                            navigator.push(ProductDetailsScreen(productId))
-                        }
-                    )
+                // Show loading indicator if products are loading
+                if (productsState == null) {
+                    FavoriteLoadingState()
                 }
             }
         }
     }
+
 }
 
 @Composable
 fun FavoritesGridState(
     productsState: Products?,
-    onProductClick: (Int) -> Unit
+    onProductClick: (ProductItemSmall) -> Unit
 ) {
     when {
         productsState?.data?.data != null && productsState.status -> {
@@ -131,14 +100,18 @@ fun FavoritesGridState(
 @Composable
 fun FavoritesGrid(
     products: List<ProductItemSmall>,
-    onProductClick: (Int) -> Unit
+    onProductClick: (ProductItemSmall) -> Unit
 ) {
-    LazyColumn (
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(8.dp)
     ) {
         items(products.filter { it.in_favorites }) { product ->
-            FavoriteProductBox(product = product, onClick = { onProductClick(product.id) })
+            key(product.id) {
+                FavoriteProductBox(
+                    product = product,
+                    onClick = { onProductClick(product) })
+            }
         }
     }
 }

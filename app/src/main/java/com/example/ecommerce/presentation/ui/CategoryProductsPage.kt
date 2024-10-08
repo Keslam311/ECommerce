@@ -103,7 +103,7 @@ class CategoryProductsScreen(
 @Composable
 fun ProductGridState(
     productsState: Products?,
-    onProductClick: (Int) -> Unit
+    onProductClick: (ProductItemSmall) -> Unit
 ) {
     when {
         productsState?.data?.data != null && productsState.status -> {
@@ -130,7 +130,7 @@ fun ProductGridState(
 @Composable
 fun ProductGrid(
     products: List<ProductItemSmall>,
-    onProductClick: (Int) -> Unit
+    onProductClick: (ProductItemSmall) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -138,7 +138,7 @@ fun ProductGrid(
         contentPadding = PaddingValues(8.dp)
     ) {
         items(products) { product ->
-            ProductBox(product = product, onClick = { onProductClick(product.id) })
+            ProductBox(product = product, onClick = { onProductClick(product) })
         }
     }
 }
