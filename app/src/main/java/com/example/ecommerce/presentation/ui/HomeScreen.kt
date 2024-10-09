@@ -17,8 +17,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -76,6 +78,9 @@ fun HomeScreenContent(
                 }
                 IconButton(modifier = Modifier.weight(1f), onClick = { /* Navigate to Cart Screen */ }) {
                     Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")
+                }
+                IconButton(modifier = Modifier.weight(1f),onClick = { navigator.push(SearchProductsScreen()) }) {
+                    Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search")
                 }
                 IconButton(modifier = Modifier.weight(1f), onClick = { navigator.push(Settings()) }) {
                     Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
@@ -149,7 +154,7 @@ fun CategoryItem(category: CategoryItem,id:Int,name:String) {
         modifier = Modifier
             .padding(8.dp)
             .fillMaxSize()
-            .clickable { navigator.push(CategoryProductsScreen(categoryId = id,name=name)) },
+            .clickable { navigator.push(CategoryProductsScreen(categoryId = id, name = name)) },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(

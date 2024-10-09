@@ -33,17 +33,12 @@ class CategoryProductsScreen(
     @Composable
     override fun Content() {
         val viewModel: CategoryProductsViewModel = hiltViewModel()
-        val searchViewModel: SearchViewModel = hiltViewModel()
         val navigator = LocalNavigator.currentOrThrow
-        var searchText by remember { mutableStateOf("") }
 
         LaunchedEffect(categoryId) {
             viewModel.getProducts(categoryId)
         }
 
-        LaunchedEffect(searchText) {
-            searchViewModel.getProductsSearch(searchText)
-        }
 
         Scaffold(
             topBar = {
@@ -62,20 +57,8 @@ class CategoryProductsScreen(
                     .fillMaxSize()
                     .padding(padding)
             ) {
-                OutlinedTextField(
-                    value = searchText,
-                    onValueChange = { newText ->
-                        searchText = newText
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    placeholder = { Text("Search Products") }
-                )
-
                 Spacer(modifier = Modifier.height(8.dp))
 
-                if (searchText.isBlank()) {
                     // عرض منتجات الفئة
                     val productsState by viewModel.categoryProducts.collectAsState()
                     ProductGridState(
@@ -84,16 +67,6 @@ class CategoryProductsScreen(
                             navigator.push(ProductDetailsScreen(productId))
                         }
                     )
-                } else {
-                    // عرض نتائج البحث
-                    val searchState by searchViewModel.productSearch.collectAsState()
-                    ProductGridState(
-                        productsState = searchState,
-                        onProductClick = { productId ->
-                            navigator.push(ProductDetailsScreen(productId))
-                        }
-                    )
-                }
             }
         }
     }
