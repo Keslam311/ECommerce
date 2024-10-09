@@ -11,6 +11,9 @@
     <string name="added_to_favorites">تمت إضافته إلى المفضلة</string>
     <string name="removed_from_favorites">تمت إزالته من المفضلة</string>
     <string name="error_occurred">حدث خطأ</string>
-    </resources>
+    <string name="price_label">سعر</string>
+    <string name="read_more">قراءة المزيد</string>
+    <string name="read_less">عرض أقل</string>
+</resources>
 
 

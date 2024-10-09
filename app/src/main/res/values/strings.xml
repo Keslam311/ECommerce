@@ -10,6 +10,10 @@
     <string name="added_to_favorites">Added to Favorites</string>
     <string name="removed_from_favorites">Removed from Favorites</string>
     <string name="error_occurred">Error occurred</string>
+    <string name="price_label"> Price</string>
+    <string name="read_more">Read more</string>
+    <string name="read_less">Read less</string>
+
 </resources>
 
 

@@ -38,7 +38,7 @@ class CategoryProductsScreen(
         var searchText by remember { mutableStateOf("") }
 
         LaunchedEffect(categoryId) {
-            viewModel.setCategoryId(categoryId)
+            viewModel.getProducts(categoryId)
         }
 
         LaunchedEffect(searchText) {

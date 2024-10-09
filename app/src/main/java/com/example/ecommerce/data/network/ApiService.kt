@@ -51,9 +51,6 @@ interface ApiService {
     @GET("products")
     suspend fun getAllProduct():Response<Products>
 
-    @GET("products")
-    suspend fun getProductDetails(@Query("product_id") productId: Int): Response<Products>
-
     @GET("profile")
     suspend fun getProfile(): Response<Profile>
 
@@ -84,8 +81,6 @@ interface ApiService {
     @POST("favorites")
     suspend fun addOrDeleteFavorites(@Body id: AddOrDeleteFavoriteRequest) : Response<AddOrDeleteResponse>
 
-    @GET("favorites")
-    suspend fun getFavorites() : Response<GetFavorites>
 
 
 }

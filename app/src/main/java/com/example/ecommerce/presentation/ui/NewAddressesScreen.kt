@@ -58,7 +58,6 @@ fun NewAddressesScreen(
     var name by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
     var region by remember { mutableStateOf("") }
-
     val context = LocalContext.current
 
     val addressesResponse by viewModel.newAddressesResponse.collectAsState()

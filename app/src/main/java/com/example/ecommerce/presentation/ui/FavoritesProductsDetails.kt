@@ -9,17 +9,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import coil.compose.rememberAsyncImagePainter
 import com.example.ecommerce.data.model.ProductItemSmall
@@ -27,36 +24,28 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import com.example.ecommerce.util.PreferencesManager
 import com.example.ecommerce.R
-import com.example.ecommerce.presentation.viewModel.CategoryProductsViewModel
-import com.example.ecommerce.presentation.viewModel.FavoritesViewModel
 
-class ProductDetailsScreen(
+class FavoritesProductsDetails(
     private val product: ProductItemSmall // Directly using product instead of products
 ) : Screen {
     @Composable
     override fun Content() {
-        ProductDetailCard(product)
+        FavoritesProductDetailCard(product)
     }
 }
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ProductDetailCard(product: ProductItemSmall) {
+fun FavoritesProductDetailCard(product: ProductItemSmall) {
     val navigator = LocalNavigator.currentOrThrow
     val context = LocalContext.current
-    val categoryViewModel: CategoryProductsViewModel = hiltViewModel()
-    val favoritesViewModel: FavoritesViewModel = hiltViewModel()
 
     // State to manage toast messages
     var toastMessage by remember { mutableStateOf("") }
 
     // State to manage if description is expanded or not
     var isExpanded by remember { mutableStateOf(false) }
-
-    // Load favorite state from SharedPreferences
-    val isFavoriteState = PreferencesManager.isFavorite(context, product.id.toString())
-    var isFavorite by remember { mutableStateOf(isFavoriteState) }
 
     // Handle showing the toast messages
     LaunchedEffect(toastMessage) {
@@ -114,25 +103,6 @@ fun ProductDetailCard(product: ProductItemSmall) {
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f)
                     )
-
-                    IconButton(onClick = {
-                        isFavorite = !isFavorite
-                        PreferencesManager.setFavorite(context, product.id.toString(), isFavorite) // Convert to String and save to SharedPreferences
-                        favoritesViewModel.favoriteAddOrDelete(product.id, onSuccess = {
-                            toastMessage = if (isFavorite) "Added to favorites" else "Removed from favorites"
-                            categoryViewModel.getAllProduct()
-                        }, onError = {
-                            isFavorite = !isFavorite // Roll back favorite status on error
-                            toastMessage = "Error occurred while updating favorites."
-                        })
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = stringResource(id = R.string.favorite),
-                            tint = if (isFavorite) Color.Red else Color.Gray, // Change color based on favorite status
-
-                        )
-                    }
 
                 }
 

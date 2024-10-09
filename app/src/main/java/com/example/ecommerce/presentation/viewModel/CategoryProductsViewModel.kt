@@ -105,6 +105,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommerce.data.model.AddOrDeleteFavoriteRequest
 import com.example.ecommerce.data.model.AddOrDeleteResponse
+import com.example.ecommerce.data.model.ProductItemSmall
 import com.example.ecommerce.data.model.Products
 import com.example.ecommerce.data.network.ApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -120,27 +121,10 @@ class CategoryProductsViewModel @Inject constructor(private val apiService: ApiS
     private val _categoryProducts = MutableStateFlow<Products?>(null)
     val categoryProducts: StateFlow<Products?> get() = _categoryProducts
 
-    private val _allProducts = MutableStateFlow<Products?>(null)
-    val allProducts: StateFlow<Products?> get() = _allProducts
+    private val _allProducts = MutableStateFlow<List<ProductItemSmall>?>(null)
+    val allProducts: StateFlow<List<ProductItemSmall>?> get() = _allProducts
 
-//    private val _favoriteAddOrDelete = MutableStateFlow<AddOrDeleteResponse?>(null)
-//    val favoriteAddOrDelete: StateFlow<AddOrDeleteResponse?> get() = _favoriteAddOrDelete
-
-    private var currentCategoryId: Int? = null
-
-    init {
-        getAllProduct()
-    }
-
-    fun setCategoryId(id: Int) {
-        if (currentCategoryId != id) {
-            currentCategoryId = id
-            getProducts()
-        }
-    }
-
-    private fun getProducts() {
-        currentCategoryId?.let { id ->
+     fun getProducts(id:Int) {
             viewModelScope.launch {
                 try {
                     val response = apiService.getProductsByCategory(id)
@@ -153,7 +137,7 @@ class CategoryProductsViewModel @Inject constructor(private val apiService: ApiS
                     handleError("Exception occurred while getting products by category: ${ex.localizedMessage}")
                 }
             }
-        }
+
     }
 
     fun getAllProduct() {
@@ -161,7 +145,7 @@ class CategoryProductsViewModel @Inject constructor(private val apiService: ApiS
             try {
                 val response = apiService.getAllProduct()
                 if (response.isSuccessful) {
-                    _allProducts.value = response.body()
+                    _allProducts.value = response.body()?.data?.data?.filter { it.in_favorites }
                 } else {
                     handleError("Failed to get all products: ${response.code()}")
                 }
@@ -170,31 +154,6 @@ class CategoryProductsViewModel @Inject constructor(private val apiService: ApiS
             }
         }
     }
-/*
-    fun favoriteAddOrDelete(
-        productId: Int,
-        onError:(String) -> Unit,
-        onSuccess: (String) -> Unit
-    ) {
-        viewModelScope.launch {
-            try {
-                val response =
-                    apiService.addOrDeleteFavorites(AddOrDeleteFavoriteRequest(product_id = productId))
-                if (response.isSuccessful) {
-                    _favoriteAddOrDelete.value = response.body()
-                    getAllProduct()  // Refresh the list of all products after updating favorites
-                    onSuccess(response.message())
-                } else {
-                    _favoriteAddOrDelete.value = null
-                    onError("Failed to add or delete favorite: ${response.message()}")
-                }
-            } catch (ex: Exception) {
-                _favoriteAddOrDelete.value = null
-                onError("Exception occurred while adding or deleting favorite: ${ex.localizedMessage}")
-            }
-        }
-    }
-*/
     private fun handleError(message: String) {
         Log.w("Error", message)
         // Optionally, update UI state to reflect the error if needed.

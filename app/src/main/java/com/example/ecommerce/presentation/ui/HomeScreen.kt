@@ -124,7 +124,7 @@ fun HomeScreenContent(
                         verticalArrangement = Arrangement.Center
                     ) {
                         items(categories) { category ->
-                            CategoryItem(category = category)
+                            CategoryItem(category = category,category.id)
                         }
                     }
                 } else {
@@ -143,13 +143,13 @@ fun HomeScreenContent(
 
 
 @Composable
-fun CategoryItem(category: CategoryItem) {
+fun CategoryItem(category: CategoryItem,id:Int) {
     val navigator = LocalNavigator.currentOrThrow
     Column(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxSize()
-            .clickable { navigator.push(CategoryProductsScreen(categoryId = category.id)) },
+            .clickable { navigator.push(CategoryProductsScreen(categoryId = id)) },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
