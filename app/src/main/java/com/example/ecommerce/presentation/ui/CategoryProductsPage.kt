@@ -23,37 +23,30 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.ecommerce.data.model.ProductItemSmall
 import com.example.ecommerce.data.model.Products
 import com.example.ecommerce.presentation.viewModel.CategoryProductsViewModel
-import com.example.ecommerce.presentation.viewModel.SearchViewModel
 
 class CategoryProductsScreen(
     private val categoryId: Int,
-    private val name:String
+    private val name: String
 ) : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         val viewModel: CategoryProductsViewModel = hiltViewModel()
-        val searchViewModel: SearchViewModel = hiltViewModel()
         val navigator = LocalNavigator.currentOrThrow
-        var searchText by remember { mutableStateOf("") }
+        val productsState by viewModel.categoryProducts.collectAsState()
 
         LaunchedEffect(categoryId) {
             viewModel.getProducts(categoryId)
         }
-
-        LaunchedEffect(searchText) {
-            searchViewModel.getProductsSearch(searchText)
-        }
-
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text =name) },
+                    title = { Text(text = name) },
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {
                             Icon(Icons.Filled.ArrowBack, contentDescription = "Back to Home")
                         }
-                    },
+                    }
                 )
             }
         ) { padding ->
@@ -62,38 +55,12 @@ class CategoryProductsScreen(
                     .fillMaxSize()
                     .padding(padding)
             ) {
-                OutlinedTextField(
-                    value = searchText,
-                    onValueChange = { newText ->
-                        searchText = newText
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    placeholder = { Text("Search Products") }
+                ProductGridState(
+                    productsState = productsState,
+                    onProductClick = { product ->
+                        navigator.push(ProductDetailsScreen(product))
+                    }
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                if (searchText.isBlank()) {
-                    // عرض منتجات الفئة
-                    val productsState by viewModel.categoryProducts.collectAsState()
-                    ProductGridState(
-                        productsState = productsState,
-                        onProductClick = { productId ->
-                            navigator.push(ProductDetailsScreen(productId))
-                        }
-                    )
-                } else {
-                    // عرض نتائج البحث
-                    val searchState by searchViewModel.productSearch.collectAsState()
-                    ProductGridState(
-                        productsState = searchState,
-                        onProductClick = { productId ->
-                            navigator.push(ProductDetailsScreen(productId))
-                        }
-                    )
-                }
             }
         }
     }
