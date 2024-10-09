@@ -94,22 +94,19 @@ class FavoritesViewModel @Inject constructor(private val apiService: ApiService)
     }
 }
  */
+
 package com.example.ecommerce.presentation.viewModel
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommerce.data.model.AddOrDeleteFavoriteRequest
 import com.example.ecommerce.data.model.AddOrDeleteResponse
 import com.example.ecommerce.data.model.GetFavorites
-import com.example.ecommerce.data.model.Product
 import com.example.ecommerce.data.model.Products
 import com.example.ecommerce.data.network.ApiService
-import com.example.ecommerce.util.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -157,6 +154,20 @@ class FavoritesViewModel @Inject constructor(private val apiService: ApiService)
                 onError("Exception: ${ex.localizedMessage}")
             } finally {
                 _isLoading.value = false
+            }
+        }
+    }
+    fun getFavorites() {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getFavorites()
+                if (response.isSuccessful) {
+                    _favorites.value = response.body()
+                } else {
+                    _favorites.value = null
+                }
+            } catch (ex: Exception) {
+                _favorites.value = null
             }
         }
     }

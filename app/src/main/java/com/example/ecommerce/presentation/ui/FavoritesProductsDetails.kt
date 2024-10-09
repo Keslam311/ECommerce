@@ -25,9 +25,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.ecommerce.R
+import com.example.ecommerce.data.model.DataX
 
 class FavoritesProductsDetails(
-    private val product: ProductItemSmall // Directly using product instead of products
+    private val product: DataX // Directly using product instead of products
 ) : Screen {
     @Composable
     override fun Content() {
@@ -37,7 +38,7 @@ class FavoritesProductsDetails(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FavoritesProductDetailCard(product: ProductItemSmall) {
+fun FavoritesProductDetailCard(product: DataX) {
     val navigator = LocalNavigator.currentOrThrow
     val context = LocalContext.current
 
@@ -76,8 +77,8 @@ fun FavoritesProductDetailCard(product: ProductItemSmall) {
 
             // Product Image
             Image(
-                painter = rememberAsyncImagePainter(product.image),
-                contentDescription = product.name,
+                painter = rememberAsyncImagePainter(product.product.image),
+                contentDescription = product.product.name,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
@@ -98,7 +99,7 @@ fun FavoritesProductDetailCard(product: ProductItemSmall) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = product.name,
+                        text = product.product.name,
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f)
@@ -109,7 +110,7 @@ fun FavoritesProductDetailCard(product: ProductItemSmall) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Product Description with "Read more"
-                val formattedDescription = product.description.replace(Regex("\\. (?=[A-Za-z])"), ".\n")
+                val formattedDescription = product.product.description.replace(Regex("\\. (?=[A-Za-z])"), ".\n")
 
                 Text(
                     text = formattedDescription,
@@ -119,7 +120,7 @@ fun FavoritesProductDetailCard(product: ProductItemSmall) {
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                 )
 
-                if (product.description.length > 100) {
+                if (product.product.description.length > 100) {
                     Text(
                         text = if (isExpanded) stringResource(id = R.string.read_less) else stringResource(id = R.string.read_more),
                         color = MaterialTheme.colorScheme.secondary,
@@ -131,7 +132,7 @@ fun FavoritesProductDetailCard(product: ProductItemSmall) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "${stringResource(id = R.string.price_label)}: ${product.price}",
+                    text = "${stringResource(id = R.string.price_label)}: ${product.product.price}",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.secondary

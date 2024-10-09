@@ -81,6 +81,9 @@ interface ApiService {
     @POST("favorites")
     suspend fun addOrDeleteFavorites(@Body id: AddOrDeleteFavoriteRequest) : Response<AddOrDeleteResponse>
 
+    @GET("favorites")
+    suspend fun getFavorites() : Response<GetFavorites>
+
 
 
 }
