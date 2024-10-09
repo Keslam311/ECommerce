@@ -40,6 +40,7 @@ class ProductDetailsScreen(
         ProductDetailCard(product)
     }
 }
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ProductDetailCard(product: ProductItemSmall) {
@@ -117,9 +118,14 @@ fun ProductDetailCard(product: ProductItemSmall) {
 
                     IconButton(onClick = {
                         isFavorite = !isFavorite
-                        PreferencesManager.setFavorite(context, product.id.toString(), isFavorite) // Convert to String and save to SharedPreferences
+                        PreferencesManager.setFavorite(
+                            context,
+                            product.id.toString(),
+                            isFavorite
+                        ) // Convert to String and save to SharedPreferences
                         favoritesViewModel.favoriteAddOrDelete(product.id, onSuccess = {
-                            toastMessage = if (isFavorite) "Added to favorites" else "Removed from favorites"
+                            toastMessage =
+                                if (isFavorite) "Added to favorites" else "Removed from favorites"
                             categoryViewModel.getAllProduct()
                         }, onError = {
                             isFavorite = !isFavorite // Roll back favorite status on error
@@ -139,7 +145,8 @@ fun ProductDetailCard(product: ProductItemSmall) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Product Description with "Read more"
-                val formattedDescription = product.description.replace(Regex("\\. (?=[A-Za-z])"), ".\n")
+                val formattedDescription =
+                    product.description.replace(Regex("\\. (?=[A-Za-z])"), ".\n")
 
                 Text(
                     text = formattedDescription,
@@ -151,7 +158,9 @@ fun ProductDetailCard(product: ProductItemSmall) {
 
                 if (product.description.length > 100) {
                     Text(
-                        text = if (isExpanded) stringResource(id = R.string.read_less) else stringResource(id = R.string.read_more),
+                        text = if (isExpanded) stringResource(id = R.string.read_less) else stringResource(
+                            id = R.string.read_more
+                        ),
                         color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.clickable { isExpanded = !isExpanded }
