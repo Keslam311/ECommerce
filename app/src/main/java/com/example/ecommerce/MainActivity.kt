@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
             val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
             val token = sharedPreferences.getString("token", null)
                 if (sharedPreferences.getString("token", null) != null) {

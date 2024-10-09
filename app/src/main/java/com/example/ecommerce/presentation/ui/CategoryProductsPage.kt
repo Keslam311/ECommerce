@@ -1,4 +1,3 @@
-
 package com.example.ecommerce.presentation.ui
 
 import androidx.compose.foundation.Image
@@ -27,7 +26,8 @@ import com.example.ecommerce.presentation.viewModel.CategoryProductsViewModel
 import com.example.ecommerce.presentation.viewModel.SearchViewModel
 
 class CategoryProductsScreen(
-    private val categoryId: Int
+    private val categoryId: Int,
+    private val name:String
 ) : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -48,7 +48,7 @@ class CategoryProductsScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "Products") },
+                    title = { Text(text =name) },
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {
                             Icon(Icons.Filled.ArrowBack, contentDescription = "Back to Home")
