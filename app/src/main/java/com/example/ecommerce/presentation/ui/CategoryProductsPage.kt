@@ -23,32 +23,30 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.ecommerce.data.model.ProductItemSmall
 import com.example.ecommerce.data.model.Products
 import com.example.ecommerce.presentation.viewModel.CategoryProductsViewModel
-import com.example.ecommerce.presentation.viewModel.SearchViewModel
 
 class CategoryProductsScreen(
     private val categoryId: Int,
-    private val name:String
+    private val name: String
 ) : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         val viewModel: CategoryProductsViewModel = hiltViewModel()
         val navigator = LocalNavigator.currentOrThrow
+        val productsState by viewModel.categoryProducts.collectAsState()
 
         LaunchedEffect(categoryId) {
             viewModel.getProducts(categoryId)
         }
-
-
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text =name) },
+                    title = { Text(text = name) },
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {
                             Icon(Icons.Filled.ArrowBack, contentDescription = "Back to Home")
                         }
-                    },
+                    }
                 )
             }
         ) { padding ->
@@ -57,16 +55,12 @@ class CategoryProductsScreen(
                     .fillMaxSize()
                     .padding(padding)
             ) {
-                Spacer(modifier = Modifier.height(8.dp))
-
-                    // عرض منتجات الفئة
-                    val productsState by viewModel.categoryProducts.collectAsState()
-                    ProductGridState(
-                        productsState = productsState,
-                        onProductClick = { productId ->
-                            navigator.push(ProductDetailsScreen(productId))
-                        }
-                    )
+                ProductGridState(
+                    productsState = productsState,
+                    onProductClick = { product ->
+                        navigator.push(ProductDetailsScreen(product))
+                    }
+                )
             }
         }
     }

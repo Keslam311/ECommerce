@@ -20,7 +20,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -53,9 +52,10 @@ class HomeScreen : Screen {
             categoriesViewModel.getCategories()
         }
 
-        HomeScreenContent(bannersViewModel,categoriesViewModel)
+        HomeScreenContent(bannersViewModel, categoriesViewModel)
     }
 }
+
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -73,18 +73,31 @@ fun HomeScreenContent(
     Scaffold(
         bottomBar = {
             BottomAppBar(modifier = Modifier.fillMaxWidth()) {
-                IconButton(modifier = Modifier.weight(1f), onClick = { navigator.push(FavoritesScreen()) }) {
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navigator.push(FavoritesScreen()) }) {
                     Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favorites")
                 }
-                IconButton(modifier = Modifier.weight(1f), onClick = { /* Navigate to Cart Screen */ }) {
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /* Navigate to Cart Screen */ }) {
                     Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")
                 }
-                IconButton(modifier = Modifier.weight(1f),onClick = { navigator.push(SearchProductsScreen()) }) {
-                    Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search")
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navigator.push(SearchScreen()) }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        modifier = Modifier.size(30.dp),
+                        contentDescription = "Search"
+                    )
                 }
-                IconButton(modifier = Modifier.weight(1f), onClick = { navigator.push(Settings()) }) {
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navigator.push(Settings()) }) {
                     Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
                 }
+
             }
         },
         content = { paddingValues ->
@@ -129,7 +142,7 @@ fun HomeScreenContent(
                         verticalArrangement = Arrangement.Center
                     ) {
                         items(categories) { category ->
-                            CategoryItem(category = category,category.id,category.name)
+                            CategoryItem(category = category, category.id, category.name)
                         }
                     }
                 } else {
@@ -146,9 +159,8 @@ fun HomeScreenContent(
 }
 
 
-
 @Composable
-fun CategoryItem(category: CategoryItem,id:Int,name:String) {
+fun CategoryItem(category: CategoryItem, id: Int, name: String) {
     val navigator = LocalNavigator.currentOrThrow
     Column(
         modifier = Modifier
