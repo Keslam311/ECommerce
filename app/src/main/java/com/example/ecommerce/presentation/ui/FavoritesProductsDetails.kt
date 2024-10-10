@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import coil.compose.rememberAsyncImagePainter
-import com.example.ecommerce.data.model.ProductItemSmall
 import cafe.adriel.voyager.navigator.currentOrThrow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight

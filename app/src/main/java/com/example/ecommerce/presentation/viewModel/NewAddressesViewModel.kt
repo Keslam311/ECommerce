@@ -3,7 +3,6 @@ package com.example.ecommerce.presentation.viewModel
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ecommerce.data.model.AddressesRequest
 import com.example.ecommerce.data.model.AddressesResponse
 import com.example.ecommerce.data.network.ApiService

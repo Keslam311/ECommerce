@@ -2,7 +2,6 @@ package com.example.ecommerce.presentation.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,7 +28,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.ecommerce.data.model.DataX
 import com.example.ecommerce.presentation.viewModel.FavoritesViewModel
 import com.example.ecommerce.util.PreferencesManager
-import kotlinx.coroutines.delay
 
 @SuppressLint("MutableCollectionMutableState")
 class FavoritesScreen : Screen {

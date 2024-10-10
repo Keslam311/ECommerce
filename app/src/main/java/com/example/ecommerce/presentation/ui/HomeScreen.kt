@@ -6,7 +6,10 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import cafe.adriel.voyager.core.screen.Screen
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -30,15 +33,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.ecommerce.data.model.CategoryItem
-import com.example.ecommerce.data.model.ProductItemSmall
 import com.example.ecommerce.presentation.viewModel.BannersViewModel
 import com.example.ecommerce.presentation.viewModel.CategoriesViewModel
+import com.example.ecommerce.presentation.viewModel.ProfileViewModel
 
 class HomeScreen : Screen {
     @Composable
@@ -69,6 +73,14 @@ fun HomeScreenContent(
     val banners = bannersResponse.value?.data ?: emptyList()
     val pagerState = rememberPagerState(pageCount = { banners.size })
     val navigator = LocalNavigator.currentOrThrow
+    val viewModel: ProfileViewModel = hiltViewModel()
+    val profile by viewModel.profileState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.getProfile { errorMessage ->
+            println("Error fetching profile: $errorMessage")
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -85,15 +97,6 @@ fun HomeScreenContent(
                 }
                 IconButton(
                     modifier = Modifier.weight(1f),
-                    onClick = { navigator.push(SearchScreen()) }) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        modifier = Modifier.size(30.dp),
-                        contentDescription = "Search"
-                    )
-                }
-                IconButton(
-                    modifier = Modifier.weight(1f),
                     onClick = { navigator.push(Settings()) }) {
                     Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
                 }
@@ -106,6 +109,37 @@ fun HomeScreenContent(
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer(modifier = Modifier.height(30.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 5.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Hello, ${profile?.data?.name}",
+                        modifier = Modifier.padding(16.dp),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Start
+                    )
+
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .padding(8.dp)
+                            .clickable(
+                                indication = null, // إخفاء تأثير الضغط الافتراضي
+                                interactionSource = remember { MutableInteractionSource() } // إخفاء التأثيرات
+                            ) {
+                                navigator.push(SearchScreen())
+                            },
+                        contentDescription = "Search",
+                    )
+                }
+
                 // Banners Section
                 if (banners.isNotEmpty()) {
                     HorizontalPager(

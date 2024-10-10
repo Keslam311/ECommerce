@@ -1,7 +1,6 @@
 package com.example.ecommerce.presentation.viewModel
 
 import android.util.Log
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommerce.data.model.AddressesResponse

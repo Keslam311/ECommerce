@@ -1,11 +1,8 @@
 package com.example.ecommerce.presentation.viewModel
 
 import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ecommerce.data.model.AddOrDeleteFavoriteRequest
-import com.example.ecommerce.data.model.AddOrDeleteResponse
 import com.example.ecommerce.data.model.ProductItemSmall
 import com.example.ecommerce.data.model.Products
 import com.example.ecommerce.data.network.ApiService

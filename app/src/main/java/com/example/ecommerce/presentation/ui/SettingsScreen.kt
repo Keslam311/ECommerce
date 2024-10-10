@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
 import android.widget.Toast
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -16,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,10 +61,12 @@ fun SettingsScreen() {
 @Composable
 fun HeaderWithBackButton() {
     val navigator = LocalNavigator.currentOrThrow
+    Spacer(modifier = Modifier.height(25.dp))
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp, 30.dp),
+            .padding(20.dp)
+        ,
         horizontalArrangement = Arrangement.Start
     ) {
         Icon(
@@ -70,7 +74,10 @@ fun HeaderWithBackButton() {
             contentDescription = "Back",
             modifier = Modifier
                 .size(25.dp)
-                .clickable(onClick = {
+                .clickable(
+                    indication = null, // إخفاء تأثير الضغط الافتراضي
+                    interactionSource = remember { MutableInteractionSource() }
+                    ,onClick = {
                     navigator.pop()
                 })
         )
@@ -341,6 +348,7 @@ fun LogoutButton() {
             LOGOUTViewModel.logout(
                 onSuccess = {
                     navigator.push(LoginScreen())
+                    Toast.makeText(context, "Logout successful", Toast.LENGTH_SHORT).show()
                 },
                 onError = { errorMessage ->
                     Toast.makeText(context,errorMessage, Toast.LENGTH_SHORT).show()

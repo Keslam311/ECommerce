@@ -2,10 +2,17 @@ package com.example.ecommerce.presentation.ui
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -15,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -29,7 +37,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.ecommerce.util.PreferencesManager
 import com.example.ecommerce.R
-import com.example.ecommerce.presentation.viewModel.CategoryProductsViewModel
 import com.example.ecommerce.presentation.viewModel.FavoritesViewModel
 
 class ProductDetailsScreen(
@@ -41,12 +48,12 @@ class ProductDetailsScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ProductDetailCard(product: ProductItemSmall) {
     val navigator = LocalNavigator.currentOrThrow
     val context = LocalContext.current
-    val categoryViewModel: CategoryProductsViewModel = hiltViewModel()
     val favoritesViewModel: FavoritesViewModel = hiltViewModel()
 
     // State to manage toast messages
@@ -58,6 +65,8 @@ fun ProductDetailCard(product: ProductItemSmall) {
     // Load favorite state from SharedPreferences
     val isFavoriteState = PreferencesManager.isFavorite(context, product.id.toString())
     var isFavorite by remember { mutableStateOf(isFavoriteState) }
+    var quantity by remember { mutableStateOf(1) }
+
 
     // Handle showing the toast messages
     LaunchedEffect(toastMessage) {
@@ -73,6 +82,7 @@ fun ProductDetailCard(product: ProductItemSmall) {
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
+            Spacer(modifier = Modifier.height(23.dp))
             // Back Arrow
             IconButton(
                 onClick = { navigator.pop() },
@@ -86,15 +96,30 @@ fun ProductDetailCard(product: ProductItemSmall) {
                 )
             }
 
-            // Product Image
-            Image(
-                painter = rememberAsyncImagePainter(product.image),
-                contentDescription = product.name,
+            // Product Image Carousel using HorizontalPager
+            val pagerState = rememberPagerState(pageCount = { product.images.size })
+
+            HorizontalPager(
+                state = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
-                    .padding(16.dp)
-                    .clip(MaterialTheme.shapes.medium)
+            ) { page ->
+                Image(
+                    painter = rememberAsyncImagePainter(product.images[page]),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(MaterialTheme.shapes.medium)
+                )
+            }
+
+            // Dots Indicator
+            DotsIndicator(
+                totalDots = product.images.size,
+                selectedIndex = pagerState.currentPage,
+                modifier = Modifier.padding(16.dp)
+                .align(Alignment.CenterHorizontally)
             )
 
             // Product Information and Favorite Icon
@@ -126,7 +151,7 @@ fun ProductDetailCard(product: ProductItemSmall) {
                         favoritesViewModel.favoriteAddOrDelete(product.id, onSuccess = {
                             toastMessage =
                                 if (isFavorite) "Added to favorites" else "Removed from favorites"
-                            categoryViewModel.getAllProduct()
+                            favoritesViewModel.getFavorites()
                         }, onError = {
                             isFavorite = !isFavorite // Roll back favorite status on error
                             toastMessage = "Error occurred while updating favorites."
@@ -177,6 +202,46 @@ fun ProductDetailCard(product: ProductItemSmall) {
                     ),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
+            }
+        }
+    }
+}
+@Composable
+fun DotsIndicator(totalDots: Int, selectedIndex: Int, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically // لضمان محاذاة العناصر عموديًا
+    ) {
+        repeat(totalDots) { index ->
+            // تغيير حجم النقطة باستخدام الانيميشن
+            val size by animateDpAsState(
+                targetValue = if (index == selectedIndex) 24.dp else 8.dp,
+                animationSpec = tween(durationMillis = 300) // مدة الانيميشن
+            )
+
+            if (index == selectedIndex) {
+                // الشرط المحدد
+                Box(
+                    modifier = Modifier
+                        .size(size, 4.dp) // حجم الشرط (عرض، ارتفاع)
+                        .background(Color.Gray) // لون الشرط
+                        .shadow(4.dp, CircleShape) // إضافة ظل
+                )
+            } else {
+                // النقطة العادية
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(Color.LightGray)
+                        .padding(4.dp)
+                        .shadow(2.dp, CircleShape) // إضافة ظل
+                )
+            }
+
+            // إضافة مسافة بين العناصر
+            if (index < totalDots - 1) {
+                Spacer(modifier = Modifier.width(8.dp)) // المسافة بين العناصر
             }
         }
     }

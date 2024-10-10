@@ -1,6 +1,5 @@
 package com.example.ecommerce.presentation.viewModel
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommerce.data.model.Products
