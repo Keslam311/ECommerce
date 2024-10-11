@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,7 +58,6 @@ fun SettingsScreen() {
     }
 }
 
-
 @Composable
 fun HeaderWithBackButton() {
     val navigator = LocalNavigator.currentOrThrow
@@ -87,6 +87,11 @@ fun HeaderWithBackButton() {
 @Composable
 fun ProfileCardUI() {
     val navigator = LocalNavigator.currentOrThrow
+    val viewModel: ProfileViewModel = hiltViewModel()
+    val profile by viewModel.profileState.collectAsState()
+    viewModel.getProfile { errorMessage ->
+        println("Error fetching profile: $errorMessage")
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -109,7 +114,12 @@ fun ProfileCardUI() {
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                 )
-
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    text = profile?.data?.email ?: "",
+                    color = SecondaryColor,
+                    fontWeight = FontWeight.Bold
+                )
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
                     onClick = {
