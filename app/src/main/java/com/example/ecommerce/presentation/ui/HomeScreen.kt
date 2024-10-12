@@ -92,7 +92,7 @@ fun HomeScreenContent(
                 }
                 IconButton(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* Navigate to Cart Screen */ }) {
+                    onClick = { navigator.push(CartsScreen()) }) {
                     Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")
                 }
                 IconButton(

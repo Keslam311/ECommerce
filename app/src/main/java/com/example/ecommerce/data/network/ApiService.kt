@@ -1,5 +1,6 @@
 package com.example.ecommerce.data.network
 
+import com.example.ecommerce.data.model.AddOrDeleteCartsResponse
 import com.example.ecommerce.data.model.AddOrDeleteFavoriteRequest
 import com.example.ecommerce.data.model.AddOrDeleteResponse
 import com.example.ecommerce.data.model.AddressesRequest
@@ -10,6 +11,7 @@ import com.example.ecommerce.data.model.ChangePasswordRequest
 import com.example.ecommerce.data.model.ChangePasswordResponse
 import com.example.ecommerce.data.model.ChangeProfileRequest
 import com.example.ecommerce.data.model.GetAddresses
+import com.example.ecommerce.data.model.GetCarts
 import com.example.ecommerce.data.model.GetFavorites
 import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
@@ -20,6 +22,8 @@ import com.example.ecommerce.data.model.SearchRequest
 import com.example.ecommerce.data.model.SignUpRequest
 import com.example.ecommerce.data.model.SignUpResponse
 import com.example.ecommerce.data.model.UpdateAddressesRequest
+import com.example.ecommerce.data.model.UpdateCart
+import com.example.ecommerce.data.model.addCartsOrDeleteCartsDataClassRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -83,6 +87,17 @@ interface ApiService {
 
     @GET("favorites")
     suspend fun getFavorites() : Response<GetFavorites>
+
+    @GET("carts")
+    suspend fun getCarts() : Response<GetCarts>
+
+    @POST("carts")
+    suspend fun addCartsOrDeleteCarts(@Body id: addCartsOrDeleteCartsDataClassRequest) : Response<AddOrDeleteCartsResponse>
+
+    @PUT("carts/{id}")
+    suspend fun updateCarts(@Path("id") id: Int, @Body quantity: Int) : Response<UpdateCart>
+
+
 
 
 

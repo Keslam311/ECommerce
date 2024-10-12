@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -35,9 +37,11 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import com.example.ecommerce.util.PreferencesManager
 import com.example.ecommerce.R
 import com.example.ecommerce.presentation.viewModel.FavoritesViewModel
+import com.example.ecommerce.presentation.viewModel.GetCartsViewModel
 
 class ProductDetailsScreen(
     private val product: ProductItemSmall // Directly using product instead of products
@@ -55,6 +59,7 @@ fun ProductDetailCard(product: ProductItemSmall) {
     val navigator = LocalNavigator.currentOrThrow
     val context = LocalContext.current
     val favoritesViewModel: FavoritesViewModel = hiltViewModel()
+    val cartViewModel: GetCartsViewModel = hiltViewModel()
 
     // State to manage toast messages
     var toastMessage by remember { mutableStateOf("") }
@@ -66,6 +71,7 @@ fun ProductDetailCard(product: ProductItemSmall) {
     val isFavoriteState = PreferencesManager.isFavorite(context, product.id.toString())
     var isFavorite by remember { mutableStateOf(isFavoriteState) }
     var quantity by remember { mutableStateOf(1) }
+
 
 
     // Handle showing the toast messages
@@ -202,6 +208,57 @@ fun ProductDetailCard(product: ProductItemSmall) {
                     ),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
+            }
+            // Quantity Section with + and - buttons
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                IconButton(onClick = { if (quantity > 1) quantity-- }) {
+                    Icon(Icons.Default.Delete, contentDescription = "Decrease quantity")
+                }
+
+                Text(
+                    text = quantity.toString(),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                IconButton(onClick = { quantity++ }) {
+                    Icon(Icons.Default.Add, contentDescription = "Increase quantity")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Add to Cart Button
+            Button(
+                onClick = {
+                    cartViewModel.addCartsOrDeleteCarts(product.id)
+                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text(text = "Add to Cart")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            // Delete to Cart Button
+            Button(
+                onClick = {
+                    cartViewModel.addCartsOrDeleteCarts(product.id)
+                    Toast.makeText(context, "Delete from cart", Toast.LENGTH_SHORT).show()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text(text = "Delete to Cart")
             }
         }
     }
