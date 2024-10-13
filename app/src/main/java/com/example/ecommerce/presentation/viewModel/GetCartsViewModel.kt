@@ -52,7 +52,9 @@ class GetCartsViewModel @Inject constructor(
     }
 
     fun addCartsOrDeleteCarts(
-        productId: Int
+        productId: Int,
+        onError: (String) -> Unit,
+        onSuccess: (String) -> Unit
     ) {
         viewModelScope.launch {
             try {
@@ -60,12 +62,14 @@ class GetCartsViewModel @Inject constructor(
                 val response = apiService.addCartsOrDeleteCarts(request)
                 if (response.isSuccessful) {
                     _addOrDeleteCarts.value = response.body()
+                    onSuccess("Cart updated successfully.")
                 } else {
                     _addOrDeleteCarts.value = null
                     Log.e(
                         "GetCartsViewModel",
                         "Error fetching carts: ${response.errorBody()?.string()}"
                     )
+                    onError("Failed to add or delete cart.")
                 }
             }catch (e: Exception) {
                 Log.e("GetCartsViewModel", "Exception: ${e.message}", e)

@@ -9,6 +9,9 @@ data class ProductXXX(
     val in_cart: Boolean,
     val in_favorites: Boolean,
     val name: String,
-    val old_price: Int,
-    val price: Int
+  //  val old_price: Int,
+//    val price: Int
+    val old_price: Double,
+    val price: Double
+
 )

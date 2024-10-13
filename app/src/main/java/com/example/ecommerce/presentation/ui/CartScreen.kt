@@ -1,5 +1,6 @@
 package com.example.ecommerce.presentation.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +42,7 @@ class CartsScreen : Screen {
 fun CartScreen(viewModel: GetCartsViewModel = hiltViewModel()) {
     val carts by viewModel.carts.collectAsState()
     val navigator = LocalNavigator.currentOrThrow
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -61,7 +65,7 @@ fun CartScreen(viewModel: GetCartsViewModel = hiltViewModel()) {
                 if (cartData.data.cart_items.isNotEmpty()) {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(cartData.data.cart_items) { cartItem ->
-                            CartItemView(cartItem)
+                            CartItemView(cartItem, context)
                         }
                         item {
                             // Subtotal and Total Section
@@ -95,7 +99,7 @@ fun CartScreen(viewModel: GetCartsViewModel = hiltViewModel()) {
     }
 }
 @Composable
-fun CartItemView(cartItem: CartItem) {
+fun CartItemView(cartItem: CartItem, context: Context) {
     val cartViewModel: GetCartsViewModel = hiltViewModel()
 
     Row(
@@ -139,8 +143,20 @@ fun CartItemView(cartItem: CartItem) {
 
         // Icon button to delete the item
         IconButton(onClick = {
-            // Call the delete function
-            cartViewModel.addCartsOrDeleteCarts(cartItem.product.id)
+            cartViewModel.addCartsOrDeleteCarts(cartItem.product.id, onSuccess = {
+                Toast.makeText(
+                    context,
+                    "Item removed from cart",
+                    Toast.LENGTH_SHORT
+                ).show()
+                cartViewModel.getCarts()
+            }, onError = {
+                Toast.makeText(
+                    context,
+                    "Error occurred while removing item from cart",
+                    Toast.LENGTH_SHORT
+                ).show()
+            })
         }) {
             Icon(
                 imageVector = Icons.Default.Delete,

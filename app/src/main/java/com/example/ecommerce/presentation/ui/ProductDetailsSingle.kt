@@ -238,27 +238,25 @@ fun ProductDetailCard(product: ProductItemSmall) {
             // Add to Cart Button
             Button(
                 onClick = {
-                    cartViewModel.addCartsOrDeleteCarts(product.id)
-                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
+                    cartViewModel.addCartsOrDeleteCarts(product.id, onSuccess = {
+                        Toast.makeText(
+                            context,
+                            "Added to cart",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }, onError = {
+                        Toast.makeText(
+                            context,
+                            "Error occurred while adding to cart.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             ) {
                 Text(text = "Add to Cart")
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            // Delete to Cart Button
-            Button(
-                onClick = {
-                    cartViewModel.addCartsOrDeleteCarts(product.id)
-                    Toast.makeText(context, "Delete from cart", Toast.LENGTH_SHORT).show()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Text(text = "Delete to Cart")
             }
         }
     }
