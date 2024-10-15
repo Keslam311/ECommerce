@@ -93,9 +93,13 @@ fun FavoritesProductDetailCard(product: DataX) {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp).background(Color.White) // Padding for better UI appearance
+                        .padding(16.dp)
+                        .background(Color.White) // Padding for better UI appearance
+                    ,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
+
                 ) {
-                    Text(text = if (isInCart) "Remove from Cart" else "Add to Cart")
+                    Text(text = if (isInCart) "Remove from Cart" else "Add to Cart", color = Color.Black)
                 }
             }
         }
@@ -109,8 +113,9 @@ fun FavoritesProductDetailCard(product: DataX) {
             IconButton(
                 onClick = { navigator.pop() },
                 modifier = Modifier
-                    .padding(16.dp)
-                    .size(32.dp)
+                    .padding(start = 16.dp, top = 25.dp)
+                    .size(50.dp)
+
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -118,6 +123,7 @@ fun FavoritesProductDetailCard(product: DataX) {
                 )
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
             // Product Image
             Image(
                 painter = rememberAsyncImagePainter(product.product.image),

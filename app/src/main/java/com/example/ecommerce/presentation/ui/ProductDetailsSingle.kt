@@ -348,7 +348,6 @@ fun ProductDetailCard(product: ProductItemSmall) {
 
     var toastMessage by remember { mutableStateOf("") }
     val navigator = LocalNavigator.currentOrThrow
-    Log.d("","fuccckkkkkkkkk ${isInCart}")
 
     Scaffold(
         bottomBar = {
@@ -380,9 +379,14 @@ fun ProductDetailCard(product: ProductItemSmall) {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp).background(Color.White) // Padding for better UI appearance
+                        .padding(16.dp)
+                        .background(Color.White)
+                        // Padding for better UI appearance,
+                    ,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
+
                 ) {
-                    Text(text = if (isInCart) "Remove from Cart" else "Add to Cart")
+                    Text(text = if (isInCart) "Remove from Cart" else "Add to Cart", color = Color.Black)
                 }
             }
         }
@@ -397,7 +401,8 @@ fun ProductDetailCard(product: ProductItemSmall) {
             IconButton(
                 onClick = { navigator.pop() },
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(50.dp)
+                    .padding(start = 16.dp) // أضف padding من الجانب الأيسر
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -407,6 +412,7 @@ fun ProductDetailCard(product: ProductItemSmall) {
 
             // Product Image Carousel using HorizontalPager
             val pagerState = rememberPagerState(pageCount = { product.images.size })
+            Spacer(modifier = Modifier.height(25.dp))
 
             HorizontalPager(
                 state = pagerState,

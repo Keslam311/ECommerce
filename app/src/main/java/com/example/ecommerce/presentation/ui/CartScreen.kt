@@ -207,14 +207,10 @@ class CartsScreen : Screen {
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "\$${
-                            String.format(
-                                "%.1f",
-                                (cartItem.product.price - (cartItem.product.price * cartItem.product.discount / 100)) * quantity
-                            )
-                        }",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.secondary
+                        text = "Price: \$${cartItem.product.price * quantity}",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
                     )
 
                     // Quantity Row
@@ -302,8 +298,9 @@ fun BuyButton(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
     ) {
-        Text(text = "Buy")
+        Text(text = "Buy",color = Color.Black, fontSize = 20.sp)
     }
 }
