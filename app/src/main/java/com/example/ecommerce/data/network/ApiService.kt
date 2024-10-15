@@ -1,5 +1,6 @@
 package com.example.ecommerce.data.network
 
+import com.example.ecommerce.data.model.AddCartRequest
 import com.example.ecommerce.data.model.AddOrDeleteCartsResponse
 import com.example.ecommerce.data.model.AddOrDeleteFavoriteRequest
 import com.example.ecommerce.data.model.AddOrDeleteResponse
@@ -95,10 +96,5 @@ interface ApiService {
     suspend fun addCartsOrDeleteCarts(@Body id: addCartsOrDeleteCartsDataClassRequest) : Response<AddOrDeleteCartsResponse>
 
     @PUT("carts/{id}")
-    suspend fun updateCarts(@Path("id") id: Int, @Body quantity: Int) : Response<UpdateCart>
-
-
-
-
-
+    suspend fun updateCarts(@Path("id") id: Int, @Body quantity: AddCartRequest) : Response<UpdateCart>
 }

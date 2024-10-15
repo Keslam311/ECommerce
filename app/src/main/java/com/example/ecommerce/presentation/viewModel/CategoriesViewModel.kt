@@ -12,6 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(private val apiService: ApiService) : ViewModel() {
+
     private val _categories = MutableStateFlow<Categories?>(null)
     val categories: StateFlow<Categories?> get() = _categories
 

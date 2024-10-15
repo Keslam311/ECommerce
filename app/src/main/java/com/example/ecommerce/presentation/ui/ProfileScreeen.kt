@@ -42,7 +42,6 @@ class ProfileScreen : Screen {
 
         LaunchedEffect(Unit) {
             viewModel.getProfile { errorMessage ->
-                Log.w("Error", "Error fetching profile: $errorMessage")
             }
         }
 

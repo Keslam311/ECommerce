@@ -71,6 +71,7 @@ dependencies {
     // Multiplatform
     // Navigator
     implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
+    implementation ("com.google.accompanist:accompanist-placeholder-material:0.31.1-alpha")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

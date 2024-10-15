@@ -6,10 +6,9 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import cafe.adriel.voyager.core.screen.Screen
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -28,6 +28,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +44,8 @@ import com.example.ecommerce.data.model.CategoryItem
 import com.example.ecommerce.presentation.viewModel.BannersViewModel
 import com.example.ecommerce.presentation.viewModel.CategoriesViewModel
 import com.example.ecommerce.presentation.viewModel.ProfileViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class HomeScreen : Screen {
     @Composable
@@ -60,7 +63,7 @@ class HomeScreen : Screen {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreenContent(
@@ -75,14 +78,48 @@ fun HomeScreenContent(
     val navigator = LocalNavigator.currentOrThrow
     val viewModel: ProfileViewModel = hiltViewModel()
     val profile by viewModel.profileState.collectAsState()
+    val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
 
+    // Get profile data on initial load
     LaunchedEffect(Unit) {
         viewModel.getProfile { errorMessage ->
             println("Error fetching profile: $errorMessage")
         }
     }
+    // Automatically scroll the pager every 3 seconds if banners are available
+    LaunchedEffect(banners) {
+        if (banners.isNotEmpty()) {
+            while (true) {
+                delay(3000) // Delay for 3 seconds
+                coroutineScope.launch {
+                    // Use modulo to wrap around the page index
+                    val nextPage = (pagerState.currentPage + 1) % banners.size
+                    pagerState.animateScrollToPage(nextPage)
+                }
+            }
+        }
+    }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Hello, ${profile?.data?.name?:""}",
+                        modifier = Modifier.padding(16.dp),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Start
+                    )
+                },
+                actions = {
+                    IconButton(onClick = { navigator.push(SearchScreen()) }) {
+                        Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                    }
+                }
+            )
+        },
         bottomBar = {
             BottomAppBar(modifier = Modifier.fillMaxWidth()) {
                 IconButton(
@@ -100,46 +137,16 @@ fun HomeScreenContent(
                     onClick = { navigator.push(Settings()) }) {
                     Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
                 }
-
             }
         },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .scrollable(state = scrollState, orientation = Orientation.Vertical),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(30.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 5.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Hello, ${profile?.data?.name}",
-                        modifier = Modifier.padding(16.dp),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Start
-                    )
-
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .padding(8.dp)
-                            .clickable(
-                                indication = null, // إخفاء تأثير الضغط الافتراضي
-                                interactionSource = remember { MutableInteractionSource() } // إخفاء التأثيرات
-                            ) {
-                                navigator.push(SearchScreen())
-                            },
-                        contentDescription = "Search",
-                    )
-                }
-
                 // Banners Section
                 if (banners.isNotEmpty()) {
                     HorizontalPager(
@@ -148,7 +155,12 @@ fun HomeScreenContent(
                         pageSize = PageSize.Fill,
                         pageSpacing = 7.dp
                     ) { index ->
-                        Card {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .shadow(8.dp, RoundedCornerShape(8.dp))
+                                .clip(RoundedCornerShape(8.dp))
+                        ) {
                             AsyncImage(
                                 model = banners[index].image,
                                 contentDescription = "Banner",
@@ -161,19 +173,19 @@ fun HomeScreenContent(
                     LoadingState()
                 }
 
+                // Categories Title
                 Text(
                     text = "Categories",
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold, fontSize = 22.sp),
                     modifier = Modifier.padding(16.dp),
                     textAlign = TextAlign.Center
                 )
 
                 // Categories Section
                 if (categories.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(16.dp))
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         items(categories) { category ->
                             CategoryItem(category = category, category.id, category.name)
@@ -191,6 +203,7 @@ fun HomeScreenContent(
         }
     )
 }
+
 
 
 @Composable
@@ -216,7 +229,8 @@ fun CategoryItem(category: CategoryItem, id: Int, name: String) {
             text = category.name,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(horizontal = 4.dp) // Add padding for better spacing
         )
     }
 }

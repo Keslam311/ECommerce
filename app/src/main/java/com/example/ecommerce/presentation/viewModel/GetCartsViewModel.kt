@@ -3,6 +3,7 @@ package com.example.ecommerce.presentation.viewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ecommerce.data.model.AddCartRequest
 import com.example.ecommerce.data.model.AddOrDeleteCartsResponse
 import com.example.ecommerce.data.model.GetCarts
 import com.example.ecommerce.data.model.UpdateCart
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 @HiltViewModel
 class GetCartsViewModel @Inject constructor(
     private val apiService: ApiService
@@ -39,11 +39,7 @@ class GetCartsViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     _carts.value = response.body()
                 } else {
-                    _carts.value = null
-                    Log.e(
-                        "GetCartsViewModel",
-                        "Error fetching carts: ${response.errorBody()?.string()}"
-                    )
+                    handleApiError("Error fetching carts", response.errorBody()?.string())
                 }
             } catch (e: Exception) {
                 Log.e("GetCartsViewModel", "Exception: ${e.message}", e)
@@ -58,43 +54,50 @@ class GetCartsViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
-                val request = addCartsOrDeleteCartsDataClassRequest( product_id = productId)
+                val request = addCartsOrDeleteCartsDataClassRequest(product_id = productId)
                 val response = apiService.addCartsOrDeleteCarts(request)
                 if (response.isSuccessful) {
                     _addOrDeleteCarts.value = response.body()
                     onSuccess("Cart updated successfully.")
                 } else {
-                    _addOrDeleteCarts.value = null
-                    Log.e(
-                        "GetCartsViewModel",
-                        "Error fetching carts: ${response.errorBody()?.string()}"
-                    )
+                    handleApiError("Failed to add or delete cart", response.errorBody()?.string())
                     onError("Failed to add or delete cart.")
                 }
-            }catch (e: Exception) {
-                Log.e("GetCartsViewModel", "Exception: ${e.message}", e)
+            } catch (e: Exception) {
+                handleException(e, onError)
             }
         }
     }
+
     fun updateCarts(
         productId: Int,
-        quantity: Int
-    ){
+        quantity: Int,
+        onError: (String) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
             try {
-                val response = apiService.updateCarts( productId, quantity)
+                val response = apiService.updateCarts(productId, AddCartRequest(quantity = quantity))
                 if (response.isSuccessful) {
                     getCarts()
-            }else {
-                _carts.value = null
-                Log.e(
-                    "GetCartsViewModel",
-                    "Error fetching carts: ${response.errorBody()?.string()}"
-                )
+                    onSuccess()
+                } else {
+                    handleApiError("Failed to update cart", response.errorBody()?.string())
+                    onError("Failed to update cart.")
                 }
-                }catch (e: Exception) {
-                Log.e("GetCartsViewModel", "Exception: ${e.message}", e)
+            } catch (e: Exception) {
+                handleException(e, onError)
             }
         }
+    }
+
+    // Helper to handle errors
+    private fun handleApiError(logMessage: String, errorBody: String?) {
+        _carts.value = null
+    }
+
+    // Helper to handle exceptions
+    private fun handleException(e: Exception, onError: (String) -> Unit) {
+        onError("Something went wrong. Please try again.")
     }
 }
