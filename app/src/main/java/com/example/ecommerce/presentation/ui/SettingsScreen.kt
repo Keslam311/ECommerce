@@ -114,12 +114,6 @@ fun ProfileCardUI() {
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                 )
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    text = profile?.data?.email ?: "",
-                    color = SecondaryColor,
-                    fontWeight = FontWeight.Bold
-                )
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
                     onClick = {
