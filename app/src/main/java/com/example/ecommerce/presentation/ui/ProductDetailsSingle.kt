@@ -333,7 +333,7 @@ class ProductDetailsScreen(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "DefaultLocale")
 @Composable
 fun ProductDetailCard(product: ProductItemSmall) {
     val context = LocalContext.current
@@ -345,8 +345,10 @@ fun ProductDetailCard(product: ProductItemSmall) {
     // Load cart state from SharedPreferences
     val isInCartState = PreferencesManager.isProductInCart(context, product.id.toString())
     var isInCart by remember { mutableStateOf(isInCartState) }
+
     var toastMessage by remember { mutableStateOf("") }
     val navigator = LocalNavigator.currentOrThrow
+    Log.d("","fuccckkkkkkkkk ${isInCart}")
 
     Scaffold(
         bottomBar = {
@@ -489,7 +491,7 @@ fun ProductDetailCard(product: ProductItemSmall) {
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                 )
 
-                if (product.description.length > 100) {
+                if (product.description.length > 50) {
                     Text(
                         text = if (isExpanded) stringResource(id = R.string.read_less) else stringResource(
                             id = R.string.read_more
@@ -503,7 +505,7 @@ fun ProductDetailCard(product: ProductItemSmall) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "${stringResource(id = R.string.price_label)}: ${product.price}",
+                    text ="\$${product.price}",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.secondary
