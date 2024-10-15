@@ -32,7 +32,7 @@ class SuccessfulScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(Unit) {
-            delay(3000L) // Delay for 3 seconds
+            delay(1000L) // Delay for 3 seconds
             navigator.pop() // Navigate back
         }
 
