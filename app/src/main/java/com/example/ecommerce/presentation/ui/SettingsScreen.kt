@@ -81,7 +81,13 @@ fun HeaderWithBackButton() {
                     navigator.pop()
                 })
         )
-    }
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            text = "Settings",
+            fontFamily = Poppins,
+            color = SecondaryColor,
+            fontSize = 20.sp,
+        )}
 }
 
 @Composable

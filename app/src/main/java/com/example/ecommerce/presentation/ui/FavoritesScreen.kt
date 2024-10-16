@@ -237,7 +237,7 @@ class FavoritesScreen : Screen {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(color = Color(0xFFFF9800))
         }
     }
 }
