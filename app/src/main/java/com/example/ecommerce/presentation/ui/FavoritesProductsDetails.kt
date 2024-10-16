@@ -1,8 +1,10 @@
 package com.example.ecommerce.presentation.ui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -23,8 +26,11 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.ecommerce.R
 import com.example.ecommerce.data.model.DataX
+import com.example.ecommerce.presentation.viewModel.GetCartsViewModel
+import com.example.ecommerce.util.PreferencesManager
 
 class FavoritesProductsDetails(
     private val product: DataX // Directly using product instead of products
@@ -43,10 +49,11 @@ fun FavoritesProductDetailCard(product: DataX) {
 
     // State to manage toast messages
     var toastMessage by remember { mutableStateOf("") }
-
+    val cartViewModel: GetCartsViewModel = hiltViewModel()
+    val isInCartState = PreferencesManager.isProductInCart(context,product.product.id.toString())
+    var isInCart by remember { mutableStateOf(isInCartState) }
     // State to manage if description is expanded or not
     var isExpanded by remember { mutableStateOf(false) }
-
     // Handle showing the toast messages
     LaunchedEffect(toastMessage) {
         if (toastMessage.isNotEmpty()) {
@@ -54,8 +61,45 @@ fun FavoritesProductDetailCard(product: DataX) {
             toastMessage = "" // Clear message after showing
         }
     }
+    Log.d("","fuccckkkkkkkkk ${isInCart}")
 
-    Scaffold {
+    Scaffold(
+        bottomBar = {
+            // Add or Remove from Cart Button (fixed at the bottom)
+            BottomAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                containerColor = Color.White
+            ) {
+                Button(
+                    onClick = {
+                        isInCart = !isInCart // Toggle cart status
+                        PreferencesManager.setCartStatus(context, product.product.id.toString(), isInCart)
+
+                        if (isInCart) {
+                            cartViewModel.addCartsOrDeleteCarts(product.product.id, onSuccess = {
+                                Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
+                            }, onError = {
+                                Toast.makeText(context, "Error adding to cart", Toast.LENGTH_SHORT)
+                                    .show()
+                            })
+                        } else {
+                            cartViewModel.addCartsOrDeleteCarts(product.product.id, onSuccess = {
+                                Toast.makeText(context, "Removed from cart", Toast.LENGTH_SHORT).show()
+                            }, onError = {
+                                Toast.makeText(context, "Error removing from cart", Toast.LENGTH_SHORT)
+                                    .show()
+                            })
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp).background(Color.White) // Padding for better UI appearance
+                ) {
+                    Text(text = if (isInCart) "Remove from Cart" else "Add to Cart")
+                }
+            }
+        }
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

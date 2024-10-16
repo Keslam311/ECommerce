@@ -256,7 +256,7 @@ class CartsScreen : Screen {
                     viewModel.addCartsOrDeleteCarts(cartItem.product.id, onSuccess = {
                         Toast.makeText(context, "Item removed from cart", Toast.LENGTH_SHORT).show()
                         viewModel.getCarts()
-                        PreferencesManager.setFavorite(context, cartItem.product.id.toString(), false)
+                        PreferencesManager.setCartStatus(context, cartItem.product.id.toString(), false)
                     }, onError = {
                         Toast.makeText(context, "Error removing item from cart", Toast.LENGTH_SHORT)
                             .show()

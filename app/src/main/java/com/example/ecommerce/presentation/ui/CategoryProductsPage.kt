@@ -179,14 +179,14 @@ fun ProductBox(product: ProductItemSmall, onClick: () -> Unit) {
                 if (product.discount > 0) {
                     // Old price with strikethrough
                     Text(
-                        text = "Price: \$${product.price}",
+                        text = "Price: \$${product.old_price}",
                         style = MaterialTheme.typography.bodyLarge.copy(textDecoration = TextDecoration.LineThrough),
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                     Spacer(modifier = Modifier.height(4.dp)) // Space before the discounted price
                     // New discounted price formatted to one decimal place
                     Text(
-                        text = "\$${String.format("%.1f", product.price - (product.price * product.discount / 100))}",
+                        text = "\$${product.price}",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.secondary
                     )
