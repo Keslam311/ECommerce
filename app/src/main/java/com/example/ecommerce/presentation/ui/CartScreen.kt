@@ -73,6 +73,7 @@ class CartsScreen : Screen {
                     ) {
                         BuyButton(onClick = {
                             // Implement buy action
+                            navigator.push(SuccessfulScreen())
                             Toast.makeText(context, "Proceeding to payment", Toast.LENGTH_SHORT)
                                 .show()
                         })
