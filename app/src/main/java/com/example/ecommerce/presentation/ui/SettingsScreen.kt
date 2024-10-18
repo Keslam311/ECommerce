@@ -92,7 +92,7 @@ fun HeaderWithBackButton() {
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
-            text = "Settings",
+            text = stringResource(id = R.string.settings),
             fontFamily = Poppins,
             color = SecondaryColor,
             fontSize = 20.sp,
@@ -177,7 +177,7 @@ fun GeneralOptionsUI() {
             .padding(top = 10.dp)
     ) {
         Text(
-            text = "General",
+            text = stringResource(id = R.string.general),
             fontFamily = Poppins,
             color = SecondaryColor,
             fontSize = 14.sp,
