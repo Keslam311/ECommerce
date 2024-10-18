@@ -691,6 +691,7 @@ class Start : Screen {
                                 // Get Started Button
                                 Button(
                                     onClick = {
+                                        navigator.push(LoginScreen())
                                         editor.putBoolean("onboarding_complete", true)
                                         editor.apply()
                                     },
