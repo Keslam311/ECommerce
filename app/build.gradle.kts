@@ -72,6 +72,8 @@ dependencies {
     // Navigator
     implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
     implementation ("com.google.accompanist:accompanist-placeholder-material:0.31.1-alpha")
+    implementation ("com.google.accompanist:accompanist-pager:0.12.0") //This dependency is used for Horizontal Pager.
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -16,14 +16,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.example.ecommerce.R
 import kotlinx.coroutines.delay
+import com.example.ecommerce.R
 
 class SuccessfulScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -32,17 +33,16 @@ class SuccessfulScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(Unit) {
-            delay(1000L) // Delay for 3 seconds
+            delay(1000L) // Delay for 1 second
             navigator.pop() // Navigate back
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = {},
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                            Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.back_to_previous))
                         }
                     },
                 )
@@ -60,7 +60,7 @@ class SuccessfulScreen : Screen {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Success",
+                        text = stringResource(R.string.success_title),
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
@@ -69,11 +69,11 @@ class SuccessfulScreen : Screen {
 
                 Image(
                     painter = painterResource(id = R.drawable.success),
-                    contentDescription = " Success Image"
+                    contentDescription = stringResource(R.string.successful_message)
                 )
 
                 Text(
-                    text = "Successful",
+                    text = stringResource(R.string.successful_message),
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )

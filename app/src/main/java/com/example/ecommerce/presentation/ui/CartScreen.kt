@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.rememberAsyncImagePainter
+import com.example.ecommerce.R
 import com.example.ecommerce.data.model.AddCartRequest
 import com.example.ecommerce.data.model.CartItem
 import com.example.ecommerce.presentation.viewModel.GetCartsViewModel
@@ -54,7 +56,7 @@ class CartsScreen : Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "My Cart") },
+                    title = { Text(stringResource(id = R.string.cart_title)) },
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {
                             Icon(
@@ -163,7 +165,12 @@ class CartsScreen : Screen {
                 .fillMaxWidth()
                 .padding(8.dp)
                 .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.medium)
-                .shadow(4.dp, MaterialTheme.shapes.medium)
+                .shadow(
+                    5.dp,
+                    MaterialTheme.shapes.extraSmall,
+                    spotColor = Color.Gray.copy(alpha = 0.7f),
+                    ambientColor = Color.Gray,
+                    )
                 .padding(16.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {

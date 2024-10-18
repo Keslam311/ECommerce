@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.rememberAsyncImagePainter
+import com.example.ecommerce.R
 import com.example.ecommerce.data.model.ProductItemSmall
 import com.example.ecommerce.data.model.Products
 import com.example.ecommerce.presentation.viewModel.SearchViewModel
@@ -50,7 +52,7 @@ class SearchScreen : Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "Search") },
+                    title = { Text(text = stringResource(id = R.string.search)) },
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {
                             Icon(Icons.Filled.ArrowBack, contentDescription = "Back to Home")
@@ -64,7 +66,6 @@ class SearchScreen : Screen {
                     .fillMaxSize()
                     .padding(padding)
             ) {
-
                 OutlinedTextField(
                     value = searchText,
                     onValueChange = { newText ->
@@ -84,12 +85,13 @@ class SearchScreen : Screen {
                         .onFocusChanged { focusState ->
                             isFocused = focusState.isFocused
                         },
-                    placeholder = { Text("Search Products") },
+                    placeholder = { Text(stringResource(id = R.string.search_placeholder)) },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = Color.Gray,
                         unfocusedBorderColor = Color.Gray
                     ),
-                    shape = RoundedCornerShape(30.dp),)
+                    shape = RoundedCornerShape(30.dp)
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -104,7 +106,7 @@ class SearchScreen : Screen {
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "This product is not available",
+                                text = stringResource(id = R.string.search_no_products),
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.bodyLarge
                             )
@@ -125,7 +127,7 @@ class SearchScreen : Screen {
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Search on the Product You Want",
+                            text = stringResource(id = R.string.search_initial_message),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.bodyLarge
                         )
@@ -135,6 +137,24 @@ class SearchScreen : Screen {
         }
     }
 }
+
+@Composable
+fun SearchErrorState(message: String) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.error,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+// Update the other functions similarly to use strings from the resource file
 
 @Composable
 fun SearchProductGridState(
@@ -157,7 +177,7 @@ fun SearchProductGridState(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "This product is not available",
+                    text = stringResource(id = R.string.search_no_products),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -166,7 +186,7 @@ fun SearchProductGridState(
 
         // Handle error case
         productsState?.status == false -> {
-            SearchErrorState(message = "Failed to load search results.")
+            SearchErrorState(message = stringResource(id = R.string.error_loading))
         }
 
         // Show initial message when no search is performed yet
@@ -176,7 +196,7 @@ fun SearchProductGridState(
                 contentAlignment = Alignment.TopCenter
             ) {
                 Text(
-                    text = "Press Search on the keyboard to find products",
+                    text = stringResource(id = R.string.search_instruction),
                     textAlign = TextAlign.Center
                 )
             }
@@ -243,18 +263,4 @@ fun SearchLoadingState() {
     }
 }
 
-@Composable
-fun SearchErrorState(message: String) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.error,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-}
+

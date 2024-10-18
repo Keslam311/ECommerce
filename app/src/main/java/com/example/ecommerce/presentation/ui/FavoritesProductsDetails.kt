@@ -41,6 +41,7 @@ class FavoritesProductsDetails(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FavoritesProductDetailCard(product: DataX) {
@@ -61,9 +62,21 @@ fun FavoritesProductDetailCard(product: DataX) {
             toastMessage = "" // Clear message after showing
         }
     }
-    Log.d("","fuccckkkkkkkkk ${isInCart}")
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(onClick = { navigator.pop() }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.back_to_home)
+                        )
+                    }
+                },
+            )
+        },
         bottomBar = {
             // Add or Remove from Cart Button (fixed at the bottom)
             BottomAppBar(
@@ -93,13 +106,9 @@ fun FavoritesProductDetailCard(product: DataX) {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
-                        .background(Color.White) // Padding for better UI appearance
-                    ,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
-
+                        .padding(16.dp).background(Color.White) // Padding for better UI appearance
                 ) {
-                    Text(text = if (isInCart) "Remove from Cart" else "Add to Cart", color = Color.Black)
+                    Text(text = if (isInCart) "Remove from Cart" else "Add to Cart")
                 }
             }
         }
@@ -109,21 +118,6 @@ fun FavoritesProductDetailCard(product: DataX) {
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
-            // Back Arrow
-            IconButton(
-                onClick = { navigator.pop() },
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 25.dp)
-                    .size(50.dp)
-
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(id = R.string.back_to_home)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
             // Product Image
             Image(
                 painter = rememberAsyncImagePainter(product.product.image),

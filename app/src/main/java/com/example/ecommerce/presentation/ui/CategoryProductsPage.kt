@@ -125,7 +125,13 @@ fun ProductBox(product: ProductItemSmall, onClick: () -> Unit) {
             .clickable { onClick() }
             .padding(8.dp) // This adds spacing between items
             .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.medium) // Added shape
-            .shadow(4.dp, MaterialTheme.shapes.medium) // Added shadow for elevation effect
+            .shadow(
+                5.dp,
+                MaterialTheme.shapes.extraSmall,
+                spotColor = Color.Gray.copy(alpha = 0.7f),
+                ambientColor = Color.Gray,
+
+            ) // Added shadow for elevation effect
     ) {
         Column(
             modifier = Modifier

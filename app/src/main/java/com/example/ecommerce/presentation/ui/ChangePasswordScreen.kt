@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -44,17 +45,21 @@ import com.example.ecommerce.ui.theme.PrimaryColor
 import com.example.ecommerce.ui.theme.SecondaryColor
 import com.example.ecommerce.ui.theme.Shapes
 
-class ChangePassword(): Screen {
+class ChangePassword() : Screen {
     @Composable
     override fun Content() {
         val viewModel: ChangePasswordViewModel = hiltViewModel()
         val changePasswordResponse by viewModel.changePasswordResponse.collectAsState()
-        ForgotPasswordScreen(viewModel, changePasswordResponse)
+        PasswordScreen(viewModel, changePasswordResponse)
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordResponse: ChangePasswordResponse?) {
+fun PasswordScreen(
+    viewModel: ChangePasswordViewModel,
+    changePasswordResponse: ChangePasswordResponse?
+) {
     var currentPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     val navigator = LocalNavigator.currentOrThrow
@@ -96,7 +101,7 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                     modifier = Modifier.padding(vertical = 20.dp)
                 ) {
                     Text(
-                        text = "Enter your registered Password ",
+                        text = stringResource(id = R.string.enter_registered_password),
                         fontFamily = Poppins,
                         color = SecondaryColor,
                         textAlign = TextAlign.Center,
@@ -127,7 +132,10 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                             PasswordVisualTransformation()
                         },
                         placeholder = {
-                            Text(text = "Current Password", color = Color.Gray)
+                            Text(
+                                text = stringResource(id = R.string.current_password_hint),
+                                color = Color.Gray
+                            )
                         },
                         textStyle = TextStyle(
                             fontSize = 14.sp,
@@ -135,7 +143,9 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                             fontFamily = Poppins
                         ),
                         trailingIcon = {
-                            IconButton(onClick = { isCurrentPasswordVisible = !isCurrentPasswordVisible }) {
+                            IconButton(onClick = {
+                                isCurrentPasswordVisible = !isCurrentPasswordVisible
+                            }) {
                                 Icon(
                                     imageVector = if (isCurrentPasswordVisible) Icons.Filled.Close else Icons.Filled.Done,
                                     contentDescription = if (isCurrentPasswordVisible) "Hide password" else "Show password"
@@ -166,7 +176,10 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                             PasswordVisualTransformation()
                         },
                         placeholder = {
-                            Text(text = "New Password", color = Color.Gray)
+                            Text(
+                                text = stringResource(id = R.string.new_password_hint),
+                                color = Color.Gray
+                            )
                         },
                         textStyle = TextStyle(
                             fontSize = 14.sp,
@@ -190,7 +203,7 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                                     navigator.pop()
                                     Toast.makeText(
                                         context,
-                                        "Password changed successfully",
+                                        context.getString(R.string.password_changed_successfully),
                                         Toast.LENGTH_SHORT
                                     ).show()
 
@@ -215,7 +228,7 @@ fun ForgotPasswordScreen(viewModel: ChangePasswordViewModel, changePasswordRespo
                         shape = Shapes.medium
                     ) {
                         Text(
-                            text = "Change Password",
+                            text = stringResource(id = R.string.change_password_title),
                             fontFamily = Poppins,
                             color = SecondaryColor,
                             fontSize = 14.sp,

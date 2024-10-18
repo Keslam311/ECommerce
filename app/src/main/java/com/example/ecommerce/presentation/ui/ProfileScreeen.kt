@@ -1,6 +1,5 @@
 package com.example.ecommerce.presentation.ui
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,14 +42,31 @@ class ProfileScreen : Screen {
 
         LaunchedEffect(Unit) {
             viewModel.getProfile { errorMessage ->
+                // Handle any errors here if necessary
             }
         }
 
-        profile?.let {
-            ProfileContent(profile = it.data, onBackClick = { navigator.pop() })
+        // Show a loading indicator if profile data is null
+        if (profile == null) {
+            LoadingIndicator()
+        } else {
+            ProfileContent(profile = profile!!.data, onBackClick = { navigator.pop() })
         }
     }
 }
+
+@Composable
+fun LoadingIndicator() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+            .background(Color(0xFFF5F5F5)) // Optional: background color while loading
+    ) {
+        CircularProgressIndicator(color =Color(0xFFFF9800))
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
@@ -103,14 +120,26 @@ fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
                         contentScale = ContentScale.Crop
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = profile.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, fontSize = 30.sp)
+                    Text(
+                        text = profile.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = profile.email, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = profile.email,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(text = "Phone:", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = stringResource(id = R.string.phone_label),
+                            style = MaterialTheme.typography.titleMedium
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(text = profile.phone, style = MaterialTheme.typography.bodyMedium)
                     }
@@ -133,10 +162,13 @@ fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
                         ),
                         shape = Shapes.medium
                     ) {
-                        Text(text = "Change Password",  fontFamily = Poppins,
+                        Text(
+                            text = stringResource(id = R.string.change_password),
+                            fontFamily = Poppins,
                             color = SecondaryColor,
                             fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold)
+                            fontWeight = FontWeight.Bold
+                        )
                     }
 
                     // Update Profile Button
@@ -156,10 +188,13 @@ fun ProfileContent(profile: ProfileDataClass, onBackClick: () -> Unit) {
                         ),
                         shape = Shapes.medium
                     ) {
-                        Text(text = "Update Profile", fontFamily = Poppins,
+                        Text(
+                            text = stringResource(id = R.string.update_profile),
+                            fontFamily = Poppins,
                             color = SecondaryColor,
                             fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold)
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
