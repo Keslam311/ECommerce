@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,6 +41,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.example.ecommerce.R
 import com.example.ecommerce.data.model.CategoryItem
 import com.example.ecommerce.presentation.viewModel.BannersViewModel
 import com.example.ecommerce.presentation.viewModel.CategoriesViewModel
@@ -106,7 +108,7 @@ fun HomeScreenContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Hello, ${profile?.data?.name?:""}",
+                        text = stringResource(id = R.string.hello_user, profile?.data?.name ?: ""),
                         modifier = Modifier.padding(16.dp),
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
@@ -115,7 +117,7 @@ fun HomeScreenContent(
                 },
                 actions = {
                     IconButton(onClick = { navigator.push(SearchScreen()) }) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                        Icon(imageVector = Icons.Default.Search, contentDescription = stringResource(id = R.string.search))
                     }
                 }
             )
@@ -125,17 +127,17 @@ fun HomeScreenContent(
                 IconButton(
                     modifier = Modifier.weight(1f),
                     onClick = { navigator.push(FavoritesScreen()) }) {
-                    Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favorites")
+                    Icon(imageVector = Icons.Default.Favorite, contentDescription = stringResource(id = R.string.favorites))
                 }
                 IconButton(
                     modifier = Modifier.weight(1f),
                     onClick = { navigator.push(CartsScreen()) }) {
-                    Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")
+                    Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = stringResource(id = R.string.cart))
                 }
                 IconButton(
                     modifier = Modifier.weight(1f),
                     onClick = { navigator.push(Settings()) }) {
-                    Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
+                    Icon(imageVector = Icons.Default.Settings, contentDescription = stringResource(id = R.string.settings))
                 }
             }
         },
@@ -175,7 +177,7 @@ fun HomeScreenContent(
 
                 // Categories Title
                 Text(
-                    text = "Categories",
+                    text = stringResource(id = R.string.categories_title),
                     style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold, fontSize = 22.sp),
                     modifier = Modifier.padding(16.dp),
                     textAlign = TextAlign.Center
@@ -234,4 +236,3 @@ fun CategoryItem(category: CategoryItem, id: Int, name: String) {
         )
     }
 }
-

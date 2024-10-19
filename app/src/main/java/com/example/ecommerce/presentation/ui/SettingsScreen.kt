@@ -1,32 +1,36 @@
 package com.example.ecommerce.presentation.ui
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
 import android.widget.Toast
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,7 +44,13 @@ import com.example.ecommerce.ui.theme.SecondaryColor
 import com.example.ecommerce.ui.theme.Shapes
 import com.example.ecommerce.R
 import com.example.ecommerce.presentation.viewModel.LogoutViewModel
-import com.example.ecommerce.presentation.viewModel.ProfileViewModel
+import android.content.Context
+import android.content.res.Configuration
+import android.os.LocaleList
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.ui.layout.ContentScale
+import com.example.ecommerce.util.PreferencesManager
+import java.util.Locale
 
 class Settings : Screen {
     @Composable
@@ -48,6 +58,7 @@ class Settings : Screen {
         SettingsScreen()
     }
 }
+
 @Composable
 fun SettingsScreen() {
     Column() {
@@ -65,8 +76,7 @@ fun HeaderWithBackButton() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp)
-        ,
+            .padding(20.dp),
         horizontalArrangement = Arrangement.Start
     ) {
         Icon(
@@ -76,10 +86,9 @@ fun HeaderWithBackButton() {
                 .size(25.dp)
                 .clickable(
                     indication = null, // إخفاء تأثير الضغط الافتراضي
-                    interactionSource = remember { MutableInteractionSource() }
-                    ,onClick = {
-                    navigator.pop()
-                })
+                    interactionSource = remember { MutableInteractionSource() }, onClick = {
+                        navigator.pop()
+                    })
         )
     }
 }
@@ -87,11 +96,6 @@ fun HeaderWithBackButton() {
 @Composable
 fun ProfileCardUI() {
     val navigator = LocalNavigator.currentOrThrow
-    val viewModel: ProfileViewModel = hiltViewModel()
-    val profile by viewModel.profileState.collectAsState()
-    viewModel.getProfile { errorMessage ->
-        println("Error fetching profile: $errorMessage")
-    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -101,14 +105,19 @@ fun ProfileCardUI() {
         elevation = CardDefaults.cardElevation(0.dp),
         shape = Shapes.large
     ) {
-        Spacer(modifier = Modifier.weight(1f))
         Row(
-            modifier = Modifier.padding(20.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically // Center vertically
         ) {
-            Column() {
+            // Left Column for Text and Button
+            Column(
+                modifier = Modifier.weight(1f) // Take remaining space
+            ) {
                 Text(
-                    text = "Check Your Profile",
+                    text = stringResource(id = R.string.check_your_profile),
                     fontFamily = Poppins,
                     color = SecondaryColor,
                     fontSize = 16.sp,
@@ -119,9 +128,7 @@ fun ProfileCardUI() {
                     onClick = {
                         navigator.push(ProfileScreen())
                     },
-                    colors = ButtonDefaults.buttonColors(
-                          PrimaryColor
-                    ),
+                    colors = ButtonDefaults.buttonColors(PrimaryColor),
                     contentPadding = PaddingValues(horizontal = 30.dp),
                     elevation = ButtonDefaults.buttonElevation(
                         defaultElevation = 0.dp,
@@ -130,7 +137,7 @@ fun ProfileCardUI() {
                     shape = Shapes.medium
                 ) {
                     Text(
-                        text = "View",
+                        text = stringResource(id = R.string.view),
                         fontFamily = Poppins,
                         color = SecondaryColor,
                         fontSize = 12.sp,
@@ -138,19 +145,26 @@ fun ProfileCardUI() {
                     )
                 }
             }
-            Spacer(modifier = Modifier.weight(1f))
+            // Image on the right side
             Image(
                 painter = painterResource(id = R.drawable.ic_profile_card_image),
-                contentDescription = "",
-                modifier = Modifier.height(120.dp)
+                contentDescription = null,
+                modifier = Modifier
+                    .height(120.dp)
+                    .width(120.dp) // Specify a width if needed
+                    .clip(Shapes.medium), // Optional: add clipping if needed
+                contentScale = ContentScale.Crop // To maintain aspect ratio
             )
         }
     }
 }
 
+
 @Composable
 fun GeneralOptionsUI() {
     val navigator = LocalNavigator.currentOrThrow
+    var showLanguageDialog by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .padding(horizontal = 14.dp)
@@ -165,28 +179,33 @@ fun GeneralOptionsUI() {
             modifier = Modifier
                 .padding(vertical = 8.dp)
         )
+
         GeneralSettingItem(
             icon = R.drawable.ic_more,
-            mainText = "More customization",
-            subText = "Customize it more to fit your usage",
+            mainText = stringResource(id = R.string.language),
+            subText = stringResource(id = R.string.choose_your_language),
             onClick = {
-                navigator.push(PreviewCustomizationScreen())
+                showLanguageDialog = true
             }
         )
-        GeneralSettingItem(
-            icon = R.drawable.ic_more,
-            mainText = "Address",
-            subText = "Address to your account",
-            onClick = {
-                navigator.push(GetAddressesScreen())
-            }
-        )
+        if (showLanguageDialog) {
+            LanguageDialog(
+                onDismiss = { showLanguageDialog = false },
+                onConfirmClick = { selectedLanguage ->
+                    // Handle language change here
+                }
+            )
+        }
+
     }
 }
+
 @Composable
 fun GeneralSettingItem(icon: Int, mainText: String, subText: String, onClick: () -> Unit) {
+    var showDialog by remember { mutableStateOf(false) } // Manage dialog visibility
+
     Card(
-        onClick = { onClick() },
+        onClick = { showDialog = true }, // Show dialog on click
         colors = CardDefaults.cardColors(Color.White),
         modifier = Modifier
             .padding(bottom = 8.dp)
@@ -244,6 +263,10 @@ fun GeneralSettingItem(icon: Int, mainText: String, subText: String, onClick: ()
             )
         }
     }
+
+    if (showDialog) {
+        LanguageSelectionDialog(onDismiss = { showDialog = false })
+    }
 }
 
 
@@ -255,7 +278,7 @@ fun SupportOptionsUI() {
             .padding(top = 10.dp)
     ) {
         Text(
-            text = "Support",
+            text = stringResource(id = R.string.support),
             fontFamily = Poppins,
             color = SecondaryColor,
             fontSize = 14.sp,
@@ -265,27 +288,23 @@ fun SupportOptionsUI() {
         )
         SupportItem(
             icon = R.drawable.ic_whatsapp,
-            mainText = "Contact",
-            onClick = {}
-        )
-        SupportItem(
-            icon = R.drawable.ic_feedback,
-            mainText = "Feedback",
+            mainText = stringResource(id = R.string.contact),
             onClick = {}
         )
         SupportItem(
             icon = R.drawable.ic_privacy_policy,
-            mainText = "Privacy Policy",
+            mainText = stringResource(id = R.string.privacy_policy),
             onClick = {}
         )
         SupportItem(
             icon = R.drawable.ic_about,
-            mainText = "About",
+            mainText = stringResource(id = R.string.about),
             onClick = {}
         )
         LogoutButton()
     }
 }
+
 @Composable
 fun SupportItem(icon: Int, mainText: String, onClick: () -> Unit) {
     Card(
@@ -341,21 +360,21 @@ fun SupportItem(icon: Int, mainText: String, onClick: () -> Unit) {
 @Composable
 fun LogoutButton() {
     val navigator = LocalNavigator.currentOrThrow
-    val viewModel: ProfileViewModel = hiltViewModel()
-    val LOGOUTViewModel: LogoutViewModel = hiltViewModel()
-    val logoutResponse = LOGOUTViewModel.logoutResponse.collectAsState()
+    val logOutViewModel: LogoutViewModel = hiltViewModel()
     val context = LocalContext.current
-
-
     Button(
         onClick = {
-            LOGOUTViewModel.logout(
+            logOutViewModel.logout(
                 onSuccess = {
                     navigator.push(LoginScreen())
-                    Toast.makeText(context, "Logout successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.logout_successful),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 },
-                onError = { errorMessage ->
-                    Toast.makeText(context,errorMessage, Toast.LENGTH_SHORT).show()
+                onError = {
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                 }
             )
         },
@@ -375,18 +394,158 @@ fun LogoutButton() {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Logout",
+                text = stringResource(id = R.string.logout),
                 fontFamily = Poppins,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
-                imageVector = Icons.Default.ExitToApp,
+                imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                 contentDescription = "Logout",
                 modifier = Modifier.size(24.dp)
             )
         }
     }
 }
+
+@Composable
+fun LanguageSelectionDialog(onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    val options = listOf("English", "Arabic")
+    var selectedOption by remember {
+        mutableStateOf(
+            PreferencesManager.getSelectedLanguage(context) ?: "English"
+        )
+    } // Load the saved language
+
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text(text = stringResource(id = R.string.language_selection)) },
+        text = {
+            Column {
+                options.forEach { option ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                selectedOption = option
+                            }
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            colors = RadioButtonDefaults.colors(Color(0xFFFF9800)),
+                            selected = selectedOption == option,
+                            onClick = { selectedOption = option }
+                        )
+                        Text(
+                            text = option,
+                            modifier = Modifier.padding(start = 8.dp),
+                            fontFamily = Poppins
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    when (selectedOption) {
+                        "Arabic" -> setLocale(context, "ar")
+                        "English" -> setLocale(context, "en")
+                    }
+                    onDismiss()  // Dismiss the dialog after changing the locale
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
+            ) {
+                Text(text = stringResource(id = R.string.confirm))
+            }
+        }
+    )
+}
+
+@Composable
+fun LanguageDialog(onDismiss: () -> Unit, onConfirmClick: (String) -> Unit) {
+    val context = LocalContext.current
+    var selectedLanguage by remember { mutableStateOf("en") }
+
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = {
+            Text(text = stringResource(id = R.string.language_selection))
+        },
+        text = {
+            Column {
+                RadioButtonWithText(
+                    selected = selectedLanguage == "en",
+                    text = stringResource(id = R.string.english),
+                    onClick = { selectedLanguage = "en" }
+                )
+                RadioButtonWithText(
+                    selected = selectedLanguage == "ar",
+                    text = stringResource(id = R.string.arabic),
+                    onClick = { selectedLanguage = "ar" }
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirmClick(selectedLanguage)
+                    setLocale(context, selectedLanguage) // Change the locale
+                    onDismiss()
+                }
+            ) {
+                Text(text = stringResource(id = R.string.confirm))
+            }
+        }
+    )
+}
+
+@Composable
+fun RadioButtonWithText(selected: Boolean, text: String, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = null
+        )
+        Text(
+            text = text,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+    }
+}
+
+fun setLocale(context: Context, language: String) {
+    val locale = Locale(language)
+    Locale.setDefault(locale)
+
+    val config = Configuration(context.resources.configuration)
+    config.setLocale(locale)
+
+    // For API level 24 and above
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        val localeList = LocaleList(locale)
+        LocaleList.setDefault(localeList)
+        config.setLocales(localeList)
+    }
+
+    // Update the configuration
+    context.resources.updateConfiguration(config, context.resources.displayMetrics)
+
+    // Save the selected language in SharedPreferences
+    PreferencesManager.setSelectedLanguage(context, language)
+
+    // Restart the activity to apply the new locale
+    if (context is Activity) {
+        context.recreate()
+    }
+}
+
 

@@ -30,6 +30,8 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
+import com.example.ecommerce.R
 
 class LoginScreen : Screen {
     @SuppressLint("StateFlowValueCalledInComposition")
@@ -44,17 +46,14 @@ class LoginScreen : Screen {
         val viewModel: LoginViewModel = hiltViewModel()
 
         // Set up back press handling
-        val activity = context as? ComponentActivity// Set up back press handling
+        val activity = context as? ComponentActivity
         DisposableEffect(Unit) {
             val onBackPressedCallback = object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    // إنهاء التطبيق بدلاً من استخدام navigator.pop()
                     activity?.finish()
                 }
             }
-            // Register the callback
             activity?.onBackPressedDispatcher?.addCallback(onBackPressedCallback)
-            // Clean up the callback when the Composable is removed from composition
             onDispose {
                 onBackPressedCallback.remove()
             }
@@ -67,9 +66,13 @@ class LoginScreen : Screen {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Welcome Back", fontSize = 26.sp, fontWeight = FontWeight.Bold)
             Text(
-                text = "Sign in with your email or password\nor continue with social media.",
+                text = stringResource(id = R.string.welcome_back),
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = stringResource(id = R.string.sign_in_instruction),
                 color = Color.Gray,
                 textAlign = TextAlign.Center
             )
@@ -79,8 +82,13 @@ class LoginScreen : Screen {
             OutlinedTextField(
                 value = email,
                 onValueChange = { newEmail -> email = newEmail },
-                label = { Text("Email", color = Color.Black) },
-                placeholder = { Text("example@email.com", color = Color.Gray) },
+                label = { Text(stringResource(id = R.string.email), color = Color.Black) },
+                placeholder = {
+                    Text(
+                        stringResource(id = R.string.email_placeholder),
+                        color = Color.Gray
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -95,8 +103,13 @@ class LoginScreen : Screen {
             OutlinedTextField(
                 value = password,
                 onValueChange = { newPass -> password = newPass },
-                label = { Text("Password", color = Color.Black) },
-                placeholder = { Text("********", color = Color.Gray) },
+                label = { Text(stringResource(id = R.string.password), color = Color.Black) },
+                placeholder = {
+                    Text(
+                        stringResource(id = R.string.password_placeholder),
+                        color = Color.Gray
+                    )
+                },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
@@ -123,27 +136,43 @@ class LoginScreen : Screen {
                     viewModel.login(
                         LoginRequest(email = email.text, password = password.text),
                         onSuccess = {
-                            Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.successful_login),
+                                Toast.LENGTH_SHORT
+                            ).show()
                             navigator.push(HomeScreen())
                         },
                         onError = {
-                            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                it,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     )
                 },
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
             ) {
-                Text(text = "Login", color = Color.White, fontSize = 20.sp)
+                Text(
+                    text = stringResource(id = R.string.login),
+                    color = Color.White,
+                    fontSize = 20.sp
+                )
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 30.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 30.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(text = "Don't have an account? ", color = Color.Black)
+                Text(text = stringResource(id = R.string.signup_instruction), color = Color.Black)
                 Text(
-                    text = "Sign Up",
+                    text = stringResource(id = R.string.sign_up),
                     color = Color(0xFFFF9800),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
@@ -154,4 +183,3 @@ class LoginScreen : Screen {
         }
     }
 }
-

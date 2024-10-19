@@ -41,6 +41,7 @@ class FavoritesProductsDetails(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FavoritesProductDetailCard(product: DataX) {
@@ -61,9 +62,21 @@ fun FavoritesProductDetailCard(product: DataX) {
             toastMessage = "" // Clear message after showing
         }
     }
-    Log.d("","fuccckkkkkkkkk ${isInCart}")
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(onClick = { navigator.pop() }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.back_to_home)
+                        )
+                    }
+                },
+            )
+        },
         bottomBar = {
             // Add or Remove from Cart Button (fixed at the bottom)
             BottomAppBar(
@@ -105,19 +118,6 @@ fun FavoritesProductDetailCard(product: DataX) {
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
-            // Back Arrow
-            IconButton(
-                onClick = { navigator.pop() },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(32.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(id = R.string.back_to_home)
-                )
-            }
-
             // Product Image
             Image(
                 painter = rememberAsyncImagePainter(product.product.image),

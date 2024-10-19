@@ -345,10 +345,8 @@ fun ProductDetailCard(product: ProductItemSmall) {
     // Load cart state from SharedPreferences
     val isInCartState = PreferencesManager.isProductInCart(context, product.id.toString())
     var isInCart by remember { mutableStateOf(isInCartState) }
-
     var toastMessage by remember { mutableStateOf("") }
     val navigator = LocalNavigator.currentOrThrow
-    Log.d("","fuccckkkkkkkkk ${isInCart}")
 
     Scaffold(
         bottomBar = {

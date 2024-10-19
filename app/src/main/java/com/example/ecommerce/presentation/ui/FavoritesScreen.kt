@@ -16,8 +16,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -28,10 +30,10 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.ecommerce.data.model.DataX
 import com.example.ecommerce.presentation.viewModel.FavoritesViewModel
 import com.example.ecommerce.util.PreferencesManager
+import com.example.ecommerce.R
 
 @SuppressLint("MutableCollectionMutableState")
 class FavoritesScreen : Screen {
-
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -40,24 +42,25 @@ class FavoritesScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
         val productsState by viewModel.favorites.collectAsState()
+
         LaunchedEffect(Unit) {
             viewModel.getFavorites()
 //            viewModel.favoriteAddOrDelete(
-//                onError = {},
+//                productId = 95,
 //                onSuccess = {},
-//                productId = 95
+//                onError = {}
 //            )
         }
 
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "Favorite Products") },
+                    title = { Text(text = stringResource(id = R.string.favorite_products)) },
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back to Home"
+                                contentDescription = stringResource(id = R.string.back_to_home)
                             )
                         }
                     },
@@ -79,18 +82,18 @@ class FavoritesScreen : Screen {
                         viewModel = viewModel
                     )
                 }  else {
-                    when{
+                    when {
                         productsState?.data?.data?.isEmpty() == true -> {
                             Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "No favorites product yet",
-                                textAlign = TextAlign.Center
-                            )
-                        }
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.no_favorites_yet),
+                                    textAlign = TextAlign.Center
+                                )
                             }
+                        }
                         else -> {
                             FavoriteLoadingState()
                         }
@@ -98,7 +101,6 @@ class FavoritesScreen : Screen {
                 }
             }
         }
-
     }
 
     @Composable
@@ -117,7 +119,6 @@ class FavoritesScreen : Screen {
                     viewModel = viewModel
                 )
             }
-
             else -> {
                 FavoriteLoadingState()
             }
@@ -141,8 +142,7 @@ class FavoritesScreen : Screen {
                         context = context,
                         product = product,
                         onClick = { onProductClick(product) },
-                        productIndex = products.indexOf(product),
-                        viewModel=viewModel
+                        viewModel = viewModel
                     )
                 }
             }
@@ -154,10 +154,8 @@ class FavoritesScreen : Screen {
         context: Context,
         product: DataX,
         onClick: () -> Unit,
-        productIndex: Int,
         viewModel: FavoritesViewModel
     ) {
-
         val isFavoriteState = PreferencesManager.isFavorite(context, product.product.id.toString())
         var isFavorite by remember { mutableStateOf(isFavoriteState) }
         val favoritesViewModel: FavoritesViewModel = hiltViewModel()
@@ -168,6 +166,12 @@ class FavoritesScreen : Screen {
                 .clickable { onClick() }
                 .padding(8.dp)
                 .background(MaterialTheme.colorScheme.surface)
+                .shadow(
+                    5.dp,
+                    MaterialTheme.shapes.extraSmall,
+                    spotColor = Color.Gray.copy(alpha = 0.7f),
+                    ambientColor = Color.Gray,
+                )
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Image(
@@ -187,10 +191,10 @@ class FavoritesScreen : Screen {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween // Space between text and button
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Price: \$${product.product.price}",
+                        text = "${stringResource(id = R.string.price_label, product.product.price.toString())} ${product.product.price}",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.secondary
                     )
@@ -204,17 +208,16 @@ class FavoritesScreen : Screen {
                         favoritesViewModel.favoriteAddOrDelete(product.product.id, onSuccess = {
                             Toast.makeText(
                                 context,
-                                if (isFavorite) "Added to favorites" else "Removed from favorites",
+                                if (isFavorite)context.getString(R.string.added_to_favorites)
+                                else context.getString(R.string.removed_from_favorites),
                                 Toast.LENGTH_SHORT
                             ).show()
                             viewModel.getFavorites()
-                            //productList.removeAt(productIndex)
-
                         }, onError = {
                             isFavorite = !isFavorite // Roll back favorite status on error
                             Toast.makeText(
                                 context,
-                                "Error occurred while updating favorites.",
+                                it,
                                 Toast.LENGTH_SHORT
                             ).show()
                         })
@@ -230,7 +233,6 @@ class FavoritesScreen : Screen {
         }
     }
 
-
     @Composable
     fun FavoriteLoadingState() {
         Box(
@@ -241,4 +243,3 @@ class FavoritesScreen : Screen {
         }
     }
 }
-

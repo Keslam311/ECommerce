@@ -74,12 +74,6 @@ interface ApiService {
     @POST("addresses")
     suspend fun getNewAddresses(@Body addressesRequest: AddressesRequest) : Response<AddressesResponse>
 
-    @GET("addresses")
-    suspend fun getAddresses() : Response<GetAddresses>
-
-    @PUT("addresses/{id}")
-    suspend fun getUpdateAddresses(@Path("id") id: Int, @Body updateAddressesRequest: UpdateAddressesRequest ) : Response<AddressesResponse>
-
     @DELETE("addresses/{id}")
     suspend fun getDeleteAddresses(@Path("id") id: Int) : Response<AddressesResponse>
 

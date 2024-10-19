@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -124,7 +125,13 @@ fun ProductBox(product: ProductItemSmall, onClick: () -> Unit) {
             .clickable { onClick() }
             .padding(8.dp) // This adds spacing between items
             .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.medium) // Added shape
-            .shadow(4.dp, MaterialTheme.shapes.medium) // Added shadow for elevation effect
+            .shadow(
+                5.dp,
+                MaterialTheme.shapes.extraSmall,
+                spotColor = Color.Gray.copy(alpha = 0.7f),
+                ambientColor = Color.Gray,
+
+            ) // Added shadow for elevation effect
     ) {
         Column(
             modifier = Modifier

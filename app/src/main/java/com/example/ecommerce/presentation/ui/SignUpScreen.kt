@@ -51,7 +51,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.ecommerce.data.model.SignUpRequest
 import com.example.ecommerce.presentation.viewModel.SignUpViewModel
-
+import androidx.compose.ui.res.stringResource
+import com.example.ecommerce.R
 
 class SignUpScreen : Screen {
     @Composable
@@ -67,7 +68,9 @@ class SignUpScreen : Screen {
         var passwordVisible by remember { mutableStateOf(false) }
         val passwordIcon = if (passwordVisible) Icons.Default.Close else Icons.Default.Done
         var confirmPasswordVisible by remember { mutableStateOf(false) }
-        val confirmPasswordIcon = if (confirmPasswordVisible) Icons.Default.Close else Icons.Default.Done
+
+        val confirmPasswordIcon =
+            if (confirmPasswordVisible) Icons.Default.Close else Icons.Default.Done
 
         Column(
             modifier = Modifier
@@ -77,11 +80,14 @@ class SignUpScreen : Screen {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(50.dp))
-            Text(text = "Register Account", fontSize = 26.sp, fontWeight = FontWeight.Bold)
             Text(
-                text = "Complete your details or continue\n" +
-                        "with social media.",
-                color = Color.Gray, // Update to appropriate color
+                text = stringResource(id = R.string.register_account),
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = stringResource(id = R.string.complete_details),
+                color = Color.Gray,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -90,22 +96,27 @@ class SignUpScreen : Screen {
             OutlinedTextField(
                 value = email,
                 onValueChange = { newEmail -> email = newEmail },
-                label = { Text("Email", color = Color.Black) },
-                placeholder = { Text("example@email.com", color = Color.Gray) },
+                label = { Text(stringResource(id = R.string.register_email), color = Color.Black) },
+                placeholder = {
+                    Text(
+                        stringResource(id = R.string.email_placeholder),
+                        color = Color.Gray
+                    )
+                },
                 textStyle = TextStyle(color = Color.Black),
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.Email, // Example icon
+                        imageVector = Icons.Default.Email,
                         contentDescription = "Email Icon",
                         tint = Color.Black
                     )
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFFFF9800), // Set border color when focused
-                    unfocusedBorderColor = Color(0xFFFF9800), // Set border color when not focused
-                    cursorColor = Color(0xFFFF9800) // Cursor color
+                    focusedBorderColor = Color(0xFFFF9800),
+                    unfocusedBorderColor = Color(0xFFFF9800),
+                    cursorColor = Color(0xFFFF9800)
                 )
             )
 
@@ -115,8 +126,13 @@ class SignUpScreen : Screen {
             OutlinedTextField(
                 value = password,
                 onValueChange = { newPass -> password = newPass },
-                label = { Text("Password", color = Color.Black) },
-                placeholder = { Text("********", color = Color.Gray) },
+                label = { Text(stringResource(id = R.string.password), color = Color.Black) },
+                placeholder = {
+                    Text(
+                        stringResource(id = R.string.password_placeholder),
+                        color = Color.Gray
+                    )
+                },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 textStyle = TextStyle(color = Color.Black),
@@ -126,24 +142,34 @@ class SignUpScreen : Screen {
                         passwordVisible = !passwordVisible
                     }) {
                         Icon(
-                            imageVector = passwordIcon, // Icon to toggle visibility
+                            imageVector = passwordIcon,
                             contentDescription = if (passwordVisible) "Hide password" else "Show password",
                             tint = Color.Black
                         )
                     }
                 },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFFFF9800), // Set border color when focused
-                    unfocusedBorderColor = Color(0xFFFF9800), // Set border color when not focused
-                    cursorColor = Color(0xFFFF9800) // Cursor color
+                    focusedBorderColor = Color(0xFFFF9800),
+                    unfocusedBorderColor = Color(0xFFFF9800),
+                    cursorColor = Color(0xFFFF9800)
                 )
             )
             Spacer(modifier = Modifier.height(20.dp))
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { newPass -> confirmPassword = newPass },
-                label = { Text("Confirm Password", color = Color.Black) },
-                placeholder = { Text("********", color = Color.Gray) },
+                label = {
+                    Text(
+                        stringResource(id = R.string.confirm_password),
+                        color = Color.Black
+                    )
+                },
+                placeholder = {
+                    Text(
+                        stringResource(id = R.string.confirm_password_placeholder),
+                        color = Color.Gray
+                    )
+                },
                 visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 textStyle = TextStyle(color = Color.Black),
@@ -153,46 +179,56 @@ class SignUpScreen : Screen {
                         confirmPasswordVisible = !confirmPasswordVisible
                     }) {
                         Icon(
-                            imageVector = confirmPasswordIcon, // Icon to toggle visibility
+                            imageVector = confirmPasswordIcon,
                             contentDescription = if (confirmPasswordVisible) "Hide password" else "Show password",
                             tint = Color.Black
                         )
                     }
                 },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFFFF9800), // Set border color when focused
-                    unfocusedBorderColor = Color(0xFFFF9800), // Set border color when not focused
-                    cursorColor = Color(0xFFFF9800) // Cursor color
+                    focusedBorderColor = Color(0xFFFF9800),
+                    unfocusedBorderColor = Color(0xFFFF9800),
+                    cursorColor = Color(0xFFFF9800)
                 )
             )
             Spacer(modifier = Modifier.height(20.dp))
             OutlinedTextField(
                 value = name,
                 onValueChange = { newName -> name = newName },
-                label = { Text("Name", color = Color.Black) },
-                placeholder = { Text("Your name", color = Color.Gray) },
+                label = { Text(stringResource(id = R.string.register_name), color = Color.Black) },
+                placeholder = {
+                    Text(
+                        stringResource(id = R.string.name_placeholder),
+                        color = Color.Gray
+                    )
+                },
                 textStyle = TextStyle(color = Color.Black),
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.Person, // Example icon
+                        imageVector = Icons.Default.Person,
                         contentDescription = "Person Icon",
                         tint = Color.Black
                     )
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFFFF9800), // Set border color when focused
-                    unfocusedBorderColor = Color(0xFFFF9800), // Set border color when not focused
-                    cursorColor = Color(0xFFFF9800) // Cursor color
+                    focusedBorderColor = Color(0xFFFF9800),
+                    unfocusedBorderColor = Color(0xFFFF9800),
+                    cursorColor = Color(0xFFFF9800)
                 )
             )
             Spacer(modifier = Modifier.height(20.dp))
             OutlinedTextField(
                 value = phone,
                 onValueChange = { newPhone -> phone = newPhone },
-                label = { Text("Phone", color = Color.Black) },
-                placeholder = { Text("", color = Color.Gray) },
+                label = { Text(stringResource(id = R.string.phone), color = Color.Black) },
+                placeholder = {
+                    Text(
+                        stringResource(id = R.string.phone_placeholder),
+                        color = Color.Gray
+                    )
+                },
                 textStyle = TextStyle(color = Color.Black),
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = {
@@ -204,32 +240,31 @@ class SignUpScreen : Screen {
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFFFF9800), // Set border color when focused
-                    unfocusedBorderColor = Color(0xFFFF9800), // Set border color when not focused
-                    cursorColor = Color(0xFFFF9800) // Cursor color
+                    focusedBorderColor = Color(0xFFFF9800),
+                    unfocusedBorderColor = Color(0xFFFF9800),
+                    cursorColor = Color(0xFFFF9800)
                 )
             )
             Spacer(modifier = Modifier.height(30.dp))
             Button(
                 onClick = {
-                    Log.d(
-                        "data",
-                        "Email = ${email.text} , password = ${password.text}, phone = ${phone.text} , name = ${name.text}"
-                    )
                     viewModel.singUp(
                         SignUpRequest(
-                        email = email.text,
-                        name = name.text,
-                        password = password.text,
-                        phone = phone.text
-                    ),
+                            email = email.text,
+                            name = name.text,
+                            password = password.text,
+                            phone = phone.text
+                        ),
                         onSuccess = {
-                            Toast.makeText(context, "Sign-up successful", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.sign_up_successful),
+                                Toast.LENGTH_SHORT
+                            ).show()
                             navigator.push(LoginScreen())
                         },
                         onError = {
                             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                            Log.w("Error", "No Data")
                         }
                     )
                 },
@@ -240,7 +275,11 @@ class SignUpScreen : Screen {
                     containerColor = Color(0xFFFF9800)
                 )
             ) {
-                Text(text = "Sign Up", color = Color.White, fontSize = 20.sp)
+                Text(
+                    text = stringResource(id = R.string.sign_up),
+                    color = Color.White,
+                    fontSize = 20.sp
+                )
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(
@@ -249,14 +288,15 @@ class SignUpScreen : Screen {
                     .padding(top = 30.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(text = " Already have an account? ", color = Color.Black)
+                Text(text = stringResource(id = R.string.already_have_account), color = Color.Black)
                 Text(
-                    text = "Login",
+                    text = stringResource(id = R.string.login),
                     color = Color(0xFFFF9800),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
                         navigator.push(LoginScreen())
-                    })
+                    }
+                )
             }
         }
     }
