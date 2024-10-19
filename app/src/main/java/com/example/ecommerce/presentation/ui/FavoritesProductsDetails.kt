@@ -51,7 +51,7 @@ fun FavoritesProductDetailCard(product: DataX) {
     // State to manage toast messages
     var toastMessage by remember { mutableStateOf("") }
     val cartViewModel: GetCartsViewModel = hiltViewModel()
-    val isInCartState = PreferencesManager.isProductInCart(context,product.product.id.toString())
+    val isInCartState = PreferencesManager.isProductInCart(context, product.product.id.toString())
     var isInCart by remember { mutableStateOf(isInCartState) }
     // State to manage if description is expanded or not
     var isExpanded by remember { mutableStateOf(false) }
@@ -84,31 +84,58 @@ fun FavoritesProductDetailCard(product: DataX) {
                 containerColor = Color.White
             ) {
                 Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFFF9800),
+                        contentColor = Color.White
+                    ),
                     onClick = {
                         isInCart = !isInCart // Toggle cart status
-                        PreferencesManager.setCartStatus(context, product.product.id.toString(), isInCart)
+                        PreferencesManager.setCartStatus(
+                            context,
+                            product.product.id.toString(),
+                            isInCart
+                        )
 
                         if (isInCart) {
                             cartViewModel.addCartsOrDeleteCarts(product.product.id, onSuccess = {
-                                Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.item_added_to_cart),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }, onError = {
-                                Toast.makeText(context, "Error adding to cart", Toast.LENGTH_SHORT)
-                                    .show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.error_adding_to_cart),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             })
                         } else {
                             cartViewModel.addCartsOrDeleteCarts(product.product.id, onSuccess = {
-                                Toast.makeText(context, "Removed from cart", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.item_removed_from_cart),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }, onError = {
-                                Toast.makeText(context, "Error removing from cart", Toast.LENGTH_SHORT)
-                                    .show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.error_adding_to_cart),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             })
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp).background(Color.White) // Padding for better UI appearance
+                        .padding(16.dp)
+                        .background(Color.White) // Padding for better UI appearance
                 ) {
-                    Text(text = if (isInCart) "Remove from Cart" else "Add to Cart")
+                    Text(
+                        text = if (isInCart) stringResource(R.string.remove_from_cart) else stringResource(
+                            R.string.cart_added
+                        )
+                    )
                 }
             }
         }
@@ -153,7 +180,8 @@ fun FavoritesProductDetailCard(product: DataX) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Product Description with "Read more"
-                val formattedDescription = product.product.description.replace(Regex("\\. (?=[A-Za-z])"), ".\n")
+                val formattedDescription =
+                    product.product.description.replace(Regex("\\. (?=[A-Za-z])"), ".\n")
 
                 Text(
                     text = formattedDescription,
@@ -165,7 +193,9 @@ fun FavoritesProductDetailCard(product: DataX) {
 
                 if (product.product.description.length > 100) {
                     Text(
-                        text = if (isExpanded) stringResource(id = R.string.read_less) else stringResource(id = R.string.read_more),
+                        text = if (isExpanded) stringResource(id = R.string.read_less) else stringResource(
+                            id = R.string.read_more
+                        ),
                         color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.clickable { isExpanded = !isExpanded }

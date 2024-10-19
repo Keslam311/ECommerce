@@ -170,7 +170,7 @@ class CartsScreen : Screen {
                     MaterialTheme.shapes.extraSmall,
                     spotColor = Color.Gray.copy(alpha = 0.7f),
                     ambientColor = Color.Gray,
-                    )
+                )
                 .padding(16.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -258,9 +258,17 @@ class CartsScreen : Screen {
                 // Delete Button
                 IconButton(onClick = {
                     viewModel.addCartsOrDeleteCarts(cartItem.product.id, onSuccess = {
-                        Toast.makeText(context, "Item removed from cart", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.item_removed_from_cart),// Using context for Toast
+                            Toast.LENGTH_SHORT
+                        ).show()
                         viewModel.getCarts()
-                        PreferencesManager.setCartStatus(context, cartItem.product.id.toString(), false)
+                        PreferencesManager.setCartStatus(
+                            context,
+                            cartItem.product.id.toString(),
+                            false
+                        )
                     }, onError = {
                         Toast.makeText(context, "Error removing item from cart", Toast.LENGTH_SHORT)
                             .show()
@@ -294,7 +302,7 @@ class CartsScreen : Screen {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Your cart is empty.", fontSize = 20.sp, textAlign = TextAlign.Center)
+            Text(text = stringResource(R.string.your_cart_is_empty), fontSize = 20.sp, textAlign = TextAlign.Center)
         }
     }
 }
@@ -308,6 +316,10 @@ fun BuyButton(onClick: () -> Unit) {
             .padding(16.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
     ) {
-        Text(text = "Buy",color = Color.Black, fontSize = 20.sp)
+        Text(
+            text = stringResource(id = R.string.cart_buy_button),
+            color = Color.Black,
+            fontSize = 20.sp
+        )
     }
 }

@@ -121,6 +121,11 @@
     <string name="proceeding_to_payment">Proceeding to payment</string>
     <string name="your_cart_is_empty">Your cart is empty</string>
     <string name="cart_title">My Cart</string>
+    <string name="cart_buy_button">Buy</string>
+    <string name="cart_added">Add to cart</string>
+    <string name="remove_from_cart">Remove From cart</string>
+    <string name="item_added_to_cart">Item added to cart</string>
+    <string name="error_adding_to_cart">Error adding to cart</string>
 
     <string name="language_selection">Select Language</string>
     <string name="english">English</string>

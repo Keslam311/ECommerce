@@ -20,6 +20,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var authInterceptor: AuthInterceptor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,30 +31,34 @@ class MainActivity : ComponentActivity() {
             val savedLanguage = PreferencesManager.getSelectedLanguage(this) ?: "en"
             setLocale(this, savedLanguage)
 
-                if (sharedPreferences.getString("token", null) != null) {
-                    authInterceptor.setToken(token ?: "")
-                    Navigator(screen = HomeScreen())
-                }else{
-                    Navigator(screen = Start())
-                }
-
+            if (sharedPreferences.getString("token", null) != null) {
+                authInterceptor.setToken(token ?: "")
+                Navigator(screen = HomeScreen())
+            } else {
+                Navigator(screen = Start())
+            }
         }
     }
+
     private fun setLocale(context: Context, language: String) {
         val locale = Locale(language)
         Locale.setDefault(locale)
 
-        val config = Configuration(context.resources.configuration)
-        config.setLocale(locale)
-
         // For API level 24 and above
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            val localeList = LocaleList(locale)
-            LocaleList.setDefault(localeList)
-            config.setLocales(localeList)
-        }
+        val localeList = LocaleList(locale)
+        LocaleList.setDefault(localeList)
 
-        // Update the configuration
+        // Create a new configuration context with the desired locale
+        val config = Configuration(context.resources.configuration)
+        config.setLocales(localeList)
+
+        // Create a new context with the updated configuration
+        val newContext = context.createConfigurationContext(config)
+
+        // Update the resources of the context
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
+
+        // If necessary, update your app's resources to reflect the new locale
+        // This is typically not needed unless you're loading resources manually.
     }
 }

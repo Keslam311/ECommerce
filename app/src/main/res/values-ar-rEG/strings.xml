@@ -107,6 +107,9 @@
     <string name="logout">تسجيل الخروج</string>
     <string name="logout_successful">تم تسجيل الخروج بنجاح</string>
     <string name="logout_error">حدث خطأ أثناء تسجيل الخروج</string>
+    <string name="cart_buy_button">شراء</string>
+
+
 
     <!-- Cart Screen -->
     <string name="my_cart">سلتي</string>
@@ -121,6 +124,11 @@
     <string name="proceeding_to_payment">جاري التوجه للدفع</string>
     <string name="your_cart_is_empty">سلتك فارغة</string>
     <string name="cart_title">سلتي</string>
+    <string name="cart_added">أضف للسلة</string>
+    <string name="remove_from_cart">إزالة من السلة</string>
+    <string name="item_added_to_cart">تمت إضافة العنصر إلى السلة</string>
+    <string name="error_adding_to_cart">حدث خطأ أثناء إضافة العنصر إلى السلة</string>
+
 
     <string name="language_selection">اختيار اللغة</string>
     <string name="english">الإنجليزية</string>

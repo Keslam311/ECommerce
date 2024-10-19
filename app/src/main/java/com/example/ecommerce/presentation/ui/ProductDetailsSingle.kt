@@ -362,17 +362,30 @@ fun ProductDetailCard(product: ProductItemSmall) {
 
                         if (isInCart) {
                             cartViewModel.addCartsOrDeleteCarts(product.id, onSuccess = {
-                                Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.item_added_to_cart),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }, onError = {
-                                Toast.makeText(context, "Error adding to cart", Toast.LENGTH_SHORT)
-                                    .show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.error_adding_to_cart),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             })
                         } else {
                             cartViewModel.addCartsOrDeleteCarts(product.id, onSuccess = {
-                                Toast.makeText(context, "Removed from cart", Toast.LENGTH_SHORT).show()
-                            }, onError = {
-                                Toast.makeText(context, "Error removing from cart", Toast.LENGTH_SHORT)
-                                    .show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.item_removed_from_cart),
+                                    Toast.LENGTH_SHORT
+                                ).show()                            }, onError = {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.error_adding_to_cart),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             })
                         }
                     },
@@ -385,7 +398,7 @@ fun ProductDetailCard(product: ProductItemSmall) {
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
 
                 ) {
-                    Text(text = if (isInCart) "Remove from Cart" else "Add to Cart", color = Color.Black)
+                    Text(text = if (isInCart) stringResource(R.string.remove_from_cart) else stringResource(R.string.cart_added))
                 }
             }
         }
