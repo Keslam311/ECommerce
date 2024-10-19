@@ -218,7 +218,7 @@ fun LoadingState() {
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = Color(0xFFFF9800))
     }
 }
 
