@@ -278,6 +278,7 @@ fun GeneralSettingItem(icon: Int, mainText: String, subText: String, onClick: ()
 
 @Composable
 fun SupportOptionsUI() {
+    val navigator = LocalNavigator.currentOrThrow
     Column(
         modifier = Modifier
             .padding(horizontal = 14.dp)
@@ -295,7 +296,9 @@ fun SupportOptionsUI() {
         SupportItem(
             icon = R.drawable.ic_whatsapp,
             mainText = stringResource(id = R.string.contact),
-            onClick = {}
+            onClick = {
+//                navigator.push(ContactsScreen())
+            }
         )
         SupportItem(
             icon = R.drawable.ic_privacy_policy,

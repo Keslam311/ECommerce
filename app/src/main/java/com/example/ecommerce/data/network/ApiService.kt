@@ -13,6 +13,7 @@ import com.example.ecommerce.data.model.ChangePasswordResponse
 import com.example.ecommerce.data.model.ChangeProfileRequest
 import com.example.ecommerce.data.model.GetAddresses
 import com.example.ecommerce.data.model.GetCarts
+import com.example.ecommerce.data.model.GetContactsDataClass
 import com.example.ecommerce.data.model.GetFavorites
 import com.example.ecommerce.data.model.LoginRequest
 import com.example.ecommerce.data.model.LoginResponse
@@ -91,4 +92,7 @@ interface ApiService {
 
     @PUT("carts/{id}")
     suspend fun updateCarts(@Path("id") id: Int, @Body quantity: AddCartRequest) : Response<UpdateCart>
+
+    @GET("contacts")
+    suspend fun getContacts() : Response<GetContactsDataClass>
 }
