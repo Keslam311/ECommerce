@@ -143,7 +143,7 @@ class CartsScreen : Screen {
                         text = "Total Price : \$$total",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = Color.Black
                     )
                 }
             }
@@ -318,7 +318,7 @@ fun BuyButton(onClick: () -> Unit) {
     ) {
         Text(
             text = stringResource(id = R.string.cart_buy_button),
-            color = Color.Black,
+            color = Color.White,
             fontSize = 20.sp
         )
     }

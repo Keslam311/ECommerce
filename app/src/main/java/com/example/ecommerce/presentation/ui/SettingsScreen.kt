@@ -45,8 +45,11 @@ import com.example.ecommerce.ui.theme.Shapes
 import com.example.ecommerce.R
 import com.example.ecommerce.presentation.viewModel.LogoutViewModel
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.LocaleList
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.ui.layout.ContentScale
 import com.example.ecommerce.util.PreferencesManager
@@ -275,45 +278,6 @@ fun GeneralSettingItem(icon: Int, mainText: String, subText: String, onClick: ()
     }
 }
 
-
-@Composable
-fun SupportOptionsUI() {
-    val navigator = LocalNavigator.currentOrThrow
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 14.dp)
-            .padding(top = 10.dp)
-    ) {
-        Text(
-            text = stringResource(id = R.string.support),
-            fontFamily = Poppins,
-            color = SecondaryColor,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-        )
-        SupportItem(
-            icon = R.drawable.ic_whatsapp,
-            mainText = stringResource(id = R.string.contact),
-            onClick = {
-//                navigator.push(ContactsScreen())
-            }
-        )
-        SupportItem(
-            icon = R.drawable.ic_privacy_policy,
-            mainText = stringResource(id = R.string.privacy_policy),
-            onClick = {}
-        )
-        SupportItem(
-            icon = R.drawable.ic_about,
-            mainText = stringResource(id = R.string.about),
-            onClick = {}
-        )
-        LogoutButton()
-    }
-}
-
 @Composable
 fun SupportItem(icon: Int, mainText: String, onClick: () -> Unit) {
     Card(
@@ -417,6 +381,128 @@ fun LogoutButton() {
         }
     }
 }
+
+@Composable
+fun SupportOptionsUI() {
+    val navigator = LocalNavigator.currentOrThrow
+    var showContactDialog by remember { mutableStateOf(false) } // State to manage dialog visibility
+
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 14.dp)
+            .padding(top = 10.dp)
+    ) {
+        Text(
+            text = stringResource(id = R.string.support),
+            fontFamily = Poppins,
+            color = SecondaryColor,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+        )
+        SupportItem(
+            icon = R.drawable.ic_whatsapp,
+            mainText = stringResource(id = R.string.contact),
+            onClick = { showContactDialog = true } // Show dialog on click
+        )
+        SupportItem(
+            icon = R.drawable.ic_privacy_policy,
+            mainText = stringResource(id = R.string.privacy_policy),
+            onClick = {}
+        )
+        SupportItem(
+            icon = R.drawable.ic_about,
+            mainText = stringResource(id = R.string.about),
+            onClick = {}
+        )
+        LogoutButton()
+
+        // Show dialog if showContactDialog is true
+        if (showContactDialog) {
+            ContactDialog(
+                onDismiss = { showContactDialog = false }
+            )
+        }
+    }
+}
+
+@Composable
+fun ContactDialog(onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(id = R.string.contact_us)) },
+        text = {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                // صورة دائرية للهاتف
+                Image(
+                    painter = painterResource(id = R.drawable.phone2),
+                    contentDescription = "Phone Icon",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            val intent = Intent(
+                                Intent.ACTION_DIAL,
+                                Uri.parse("tel:+201007107341")
+                            )
+                            context.startActivity(intent)
+                        }
+                        .padding(vertical = 8.dp)
+
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // صورة دائرية لفيسبوك
+                Image(
+                    painter = painterResource(id = R.drawable.facebook),
+                    contentDescription = "Facebook Icon",
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://www.facebook.com/people/Eslam-Khaled/pfbid0tcgJ2RxBbXYgLDGgAmZq7ZnndfoyFu1K5J8CENi74JSCAHr3VrGG4Lq1KdRNW5CJl/?mibextid=ZbWKwL")
+                            )
+                            context.startActivity(intent)
+                        }
+                        .padding(vertical = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.linkedin),
+                    contentDescription = "LinkedIn Icon",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://www.linkedin.com/in/ahmed-zamzam-986b912a5/")
+                            )
+                            context.startActivity(intent)
+                        }
+                        .padding(vertical = 8.dp)
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = onDismiss,colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))) {
+                Text(text = stringResource(id = R.string.ok),color = Color.Black)
+            }
+        }
+    )
+}
+
+
+
 
 @Composable
 fun LanguageSelectionDialog(onDismiss: () -> Unit) {

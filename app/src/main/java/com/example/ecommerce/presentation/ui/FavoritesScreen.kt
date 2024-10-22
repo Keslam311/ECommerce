@@ -46,7 +46,7 @@ class FavoritesScreen : Screen {
         LaunchedEffect(Unit) {
             viewModel.getFavorites()
 //            viewModel.favoriteAddOrDelete(
-//                productId = 95,
+//                productId = 55,
 //                onSuccess = {},
 //                onError = {}
 //            )
