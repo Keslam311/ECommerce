@@ -21,8 +21,6 @@ Smooth transitions between product images, and detailed product descriptions.
 
 ![Product Details Animation](https://github.com/your-username/your-repo/blob/main/assets/product-details-animation.gif)
 
-## Additional Features
-
 ### 4. Login and Register
 Allow users to easily sign up or log in using their email or other credentials.
 ![Login Screen](https://github.com/user-attachments/assets/41876aae-bd42-41bf-b2d5-852a8802e865)
