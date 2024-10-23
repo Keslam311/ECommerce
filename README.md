@@ -1,4 +1,11 @@
-# E-Commerce Application
+# E-Commerce Application using Jetpack Compose with the following features:
+
+✅ MVVM Architecture for a clean, scalable, and testable codebase
+✅ Dagger Hilt for dependency injection, ensuring modularity and flexibility
+✅ Retrofit for seamless API handling and data fetching
+✅ Multi-language Support for enhanced user experience
+✅ AuthInterceptor for secure authentication and API access
+✅ Robust Repository Pattern for efficient data management and abstraction
 
 ## On Boarding
 <div style="display: flex; justify-content: space-between;">
