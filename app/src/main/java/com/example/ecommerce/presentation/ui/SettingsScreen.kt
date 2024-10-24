@@ -469,7 +469,7 @@ fun ContactDialog(onDismiss: () -> Unit) {
                         .clickable {
                             val intent = Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://www.facebook.com/people/Eslam-Khaled/pfbid0tcgJ2RxBbXYgLDGgAmZq7ZnndfoyFu1K5J8CENi74JSCAHr3VrGG4Lq1KdRNW5CJl/?mibextid=ZbWKwL")
+                                Uri.parse("https://www.facebook.com/profile.php?id=100012140385861")
                             )
                             context.startActivity(intent)
                         }
@@ -485,7 +485,7 @@ fun ContactDialog(onDismiss: () -> Unit) {
                         .clickable {
                             val intent = Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://www.linkedin.com/in/ahmed-zamzam-986b912a5/")
+                                Uri.parse("https://www.linkedin.com/in/eslam-khaled-7b70b12a0//")
                             )
                             context.startActivity(intent)
                         }
