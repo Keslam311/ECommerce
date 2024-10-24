@@ -198,7 +198,7 @@ fun PasswordScreen(
                     Spacer(modifier = Modifier.height(10.dp))
                     Button(
                         onClick = {
-                            viewModel.changePassword(currentPassword, newPassword,
+                            viewModel.changePassword(currentPassword,newPassword,
                                 onSuccess = {
                                     navigator.pop()
                                     Toast.makeText(

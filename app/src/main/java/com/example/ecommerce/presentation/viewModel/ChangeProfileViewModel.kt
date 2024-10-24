@@ -30,7 +30,6 @@ class ChangeProfileViewModel @Inject constructor(
         name: String,
         email: String,
         phone: String,
-        password: String,
         image: String,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
@@ -38,7 +37,7 @@ class ChangeProfileViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response = apiService.getUpdateProfile(ChangeProfileRequest(email, image, name, password, phone))
+                val response = apiService.getUpdateProfile(ChangeProfileRequest(email, image, name, phone))
                 Log.d("ChangeProfileViewModel", "Response: ${response.body()}")
                 if (response.isSuccessful && response.body()?.status == true) {
                     _changeProfileResponse.value = response.body()

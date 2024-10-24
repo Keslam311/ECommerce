@@ -280,7 +280,6 @@ fun ChangeProfileScreen(
     var name by remember { mutableStateOf(initialName) }
     var email by remember { mutableStateOf(initialEmail) }
     var phone by remember { mutableStateOf(initialPhone) }
-    val password by remember { mutableStateOf("") }
     val image by remember { mutableStateOf("") }
     val isLoading by viewModel.isLoading.collectAsState()
     val navigator = LocalNavigator.currentOrThrow
@@ -394,7 +393,6 @@ fun ChangeProfileScreen(
                         email = email,
                         image = image,
                         name = name,
-                        password = password,
                         phone = phone,
                         onSuccess = onSuccess,
                         onError = onError
